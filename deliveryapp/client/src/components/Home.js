@@ -50,8 +50,7 @@ const Home = () => {
         <div className="icon-group">
           <FaClipboardList className="top-icon" onClick={() => navigate('/order')} />
           <div className="cart-icon-wrapper">
-           <FaShoppingCart className="top-icon" onClick={() => navigate('/cart')} />
-
+            <FaShoppingCart className="top-icon" onClick={() => navigate('/cart')} />
             {cart.length > 0 && (
               <span className="cart-badge">{cart.length}</span>
             )}
@@ -89,7 +88,7 @@ const Home = () => {
             <button
               className="add-btn"
               onClick={(e) => {
-                e.stopPropagation(); // Prevent opening details
+                e.stopPropagation();
                 handleAddToCart(product);
               }}
             >
@@ -101,11 +100,11 @@ const Home = () => {
 
       {/* Bottom Navigation */}
       <div className="bottom-nav">
-        <div className="nav-item">
+        <div className="nav-item" onClick={() => navigate('/home')}>
           <FaHome />
           <p>Home</p>
         </div>
-        <div className="nav-item">
+        <div className="nav-item" onClick={() => navigate('/category')}>
           <FaThLarge />
           <p>Category</p>
         </div>

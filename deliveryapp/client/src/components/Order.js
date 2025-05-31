@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import './Order.css';
+import { FaHome } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const orders = [
   {
@@ -34,6 +36,7 @@ const orders = [
 
 function Order() {
   const [expandedOrderId, setExpandedOrderId] = useState(null);
+  const navigate = useNavigate();
 
   const toggleOrder = (id) => {
     setExpandedOrderId(prev => (prev === id ? null : id));
@@ -91,6 +94,18 @@ function Order() {
           )}
         </div>
       ))}
+
+      {/* Bottom Navigation with Home icon */}
+      <div className="bottom-nav">
+        <div
+          className="nav-item"
+          onClick={() => navigate('/home')}
+          style={{ cursor: 'pointer' }}
+        >
+          <FaHome size={24} />
+          <p>Home</p>
+        </div>
+      </div>
     </div>
   );
 }

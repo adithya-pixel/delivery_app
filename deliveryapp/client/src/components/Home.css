@@ -81,6 +81,12 @@
   background-color: #d4f4e5;
 }
 
+.category-chip.active {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+}
+
 /* Product List */
 .product-list {
   display: flex;
@@ -163,9 +169,11 @@
   border-top: 1px solid #ddd;
   box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.05);
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
   align-items: center;
   z-index: 1000;
+  padding: 0 30px;
+  gap: 30px; /* 👈 Add space between icons */
 }
 
 .nav-item {

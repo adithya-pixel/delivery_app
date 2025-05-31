@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import './cart.css'; // Optional styling
+import './cart.css'; // Styles including bottom nav and footer
+import { FaHome } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const CartPage = () => {
   const [cartItems, setCartItems] = useState([
     { id: 1, name: "Pizza", price: 200, quantity: 1, image: "" },
     { id: 2, name: "Burger", price: 100, quantity: 1, image: "" },
   ]);
+
+  const navigate = useNavigate();
 
   const updateQuantity = (id, amount) => {
     setCartItems(prevItems =>
@@ -26,7 +30,6 @@ const CartPage = () => {
   const grandTotal = totalPrice + gst;
 
   return (
-    
     <div className="cart-page">
       {/* Header */}
       <header className="cart-header">
@@ -48,7 +51,7 @@ const CartPage = () => {
                   <button onClick={() => updateQuantity(item.id, 1)}>+</button>
                 </div>
               </div>
-              <button onClick={() => removeItem(item.id)} style={{ color: "red", marginLeft: "10px" }}>
+              <button onClick={() => removeItem(item.id)} className="remove-btn">
                 Remove
               </button>
             </div>
@@ -61,6 +64,17 @@ const CartPage = () => {
           <p>GST (5%): ₹{gst.toFixed(2)}</p>
           <p><strong>Grand Total: ₹{grandTotal.toFixed(2)}</strong></p>
           <button className="place-order-btn">Place Order</button>
+        </div>
+      </div>
+
+      {/* Bottom Navigation */}
+      <div className="bottom-nav">
+        <div
+          className="nav-item"
+          onClick={() => navigate('/home')}
+        >
+          <FaHome size={24} />
+          <p>Home</p>
         </div>
       </div>
 
