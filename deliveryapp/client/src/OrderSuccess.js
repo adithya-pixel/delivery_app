@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './OrderSuccess.css'; // Optional: for custom styling
+import './OrderSuccess.css'; 
 
 const OrderSuccess = () => {
   const navigate = useNavigate();

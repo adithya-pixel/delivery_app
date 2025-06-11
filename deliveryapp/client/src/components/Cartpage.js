@@ -25,6 +25,20 @@ const CartPage = () => {
     });
   };
 
+    // Handle Place Order - navigate to Order page with cart data
+  const handlePlaceOrder = () => {
+    if (cartItems.length === 0) return;
+
+    navigate('/orderconfirmation', {
+      state: {
+        cartItems,
+        totalPrice,
+        gst,
+        grandTotal
+      }
+    });
+  };
+
   // Remove item by barcode
   const removeItem = (barcode) => {
     setCartItems((prevItems) => {
@@ -42,32 +56,32 @@ const CartPage = () => {
   const gst = 0; // GST is now 0%
   const grandTotal = totalPrice + gst;
 
-  // 🔻 Handle Razorpay Payment
-  const handlePayment = async () => {
-    const options = {
-      key: 'YOUR_RAZORPAY_KEY_ID', // 🔁 Replace with your real Razorpay Key ID
-      amount: grandTotal * 100, // Amount in paise
-      currency: 'INR',
-      name: 'DatCarts Delivery',
-      description: 'Order Payment',
-      handler: function (response) {
-        alert('✅ Payment successful!\nPayment ID: ' + response.razorpay_payment_id);
-        localStorage.removeItem('cart');
-        navigate('/order-success');
-      },
-      prefill: {
-        name: 'Customer Name',
-        email: 'customer@example.com',
-        contact: '9999999999',
-      },
-      theme: {
-        color: '#0ea5e9',
-      },
-    };
+  // // 🔻 Handle Razorpay Payment
+  // const handlePayment = async () => {
+  //   const options = {
+  //     key: 'YOUR_RAZORPAY_KEY_ID', // 🔁 Replace with your real Razorpay Key ID
+  //     amount: grandTotal * 100, // Amount in paise
+  //     currency: 'INR',
+  //     name: 'DatCarts Delivery',
+  //     description: 'Order Payment',
+  //     handler: function (response) {
+  //       alert('✅ Payment successful!\nPayment ID: ' + response.razorpay_payment_id);
+  //       localStorage.removeItem('cart');
+  //       navigate('/order-success');
+  //     },
+  //     prefill: {
+  //       name: 'Customer Name',
+  //       email: 'customer@example.com',
+  //       contact: '9999999999',
+  //     },
+  //     theme: {
+  //       color: '#0ea5e9',
+  //     },
+  //   };
 
-    const rzp = new window.Razorpay(options);
-    rzp.open();
-  };
+  //   const rzp = new window.Razorpay(options);
+  //   rzp.open();
+  // };
 
   return (
     <div className="cart-page">
@@ -113,7 +127,7 @@ const CartPage = () => {
           </p>
           <button
             className="place-order-btn"
-            onClick={handlePayment}
+            onClick={handlePlaceOrder}
             disabled={cartItems.length === 0}
           >
             Place Order

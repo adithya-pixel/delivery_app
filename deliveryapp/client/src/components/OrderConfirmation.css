@@ -1,0 +1,33 @@
+.order-page {
+  padding: 20px;
+  font-family: sans-serif;
+}
+
+.address-form textarea,
+.address-form input {
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  margin: 5px 0;
+}
+
+.order-price-summary {
+  margin-top: 20px;
+}
+
+.confirm-order-btn {
+  margin-top: 20px;
+  padding: 12px 20px;
+  background-color: #0ea5e9;
+  color: white;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
