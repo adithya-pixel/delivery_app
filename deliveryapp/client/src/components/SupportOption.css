@@ -1,0 +1,80 @@
+.support-container { 
+  max-width: 450px; 
+margin: 60px auto; 
+padding: 24px; 
+background: #ffffff; 
+border-radius: 16px; 
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+text-align: center; 
+} 
+.support-container h2 { 
+font-size: 24px; 
+margin-bottom: 20px; 
+color: #333; 
+} 
+.support-buttons { 
+display: flex; 
+gap: 10px; 
+justify-content: center; 
+margin-bottom: 24px; 
+} 
+.support-button { 
+flex: 1; 
+padding: 10px 16px; 
+font-size: 15px; 
+border: none; 
+border-radius: 10px; 
+cursor: pointer; 
+transition: 0.3s; 
+} 
+.contact-button { 
+background-color: #e0f7fa; 
+color: #00796b; 
+} 
+.contact-button:hover { 
+background-color: #b2ebf2; 
+} 
+.complaint-button { 
+background-color: #fff3cd; 
+color: #856404; 
+} 
+.complaint-button:hover { 
+background-color: #ffe69c; 
+} 
+.active { 
+outline: 2px solid #2196f3; 
+} 
+.support-content { 
+margin-top: 20px; 
+} 
+.contact-info p { 
+margin: 8px 0; 
+font-size: 16px; 
+color: #444; 
+} 
+.complaint-form textarea { 
+width: 100%; 
+height: 100px; 
+padding: 12px; 
+margin-bottom: 12px; 
+border: 1px solid #ccc; 
+border-radius: 10px; 
+resize: none; 
+font-size: 15px; 
+} 
+.submit-btn { 
+background-color: #4caf50; 
+color: #fff; 
+border: none; 
+padding: 10px 20px; 
+font-size: 15px; 
+border-radius: 8px; 
+cursor: pointer; 
+} 
+.submit-btn:hover { 
+background-color: #43a047; 
+} 
+.thank-you { 
+font-size: 16px; 
+color: green; 
+}

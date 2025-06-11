@@ -13,11 +13,12 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 
-// Auth routes
+// Routes
 app.use('/api/auth', require('./routes/auth'));
+app.use('/api/address', require('./routes/addressRoutes')); // ✅ NEW: Delivery address route
 
 // Load your full JSON dataset
-const products = require('./products.json'); // Make sure products.json is in the same folder or give correct relative path
+const products = require('./products.json'); // Ensure this path is correct
 
 // Products API route with pagination, category filter, and search
 app.get('/api/products', (req, res) => {
@@ -28,19 +29,16 @@ app.get('/api/products', (req, res) => {
 
   let filtered = products;
 
-  // Filter by category if specified and not 'All'
   if (category && category !== 'All') {
     filtered = filtered.filter(p => p.Category === category);
   }
 
-  // Filter by search term in ProductName
   if (search) {
     filtered = filtered.filter(p =>
       p.ProductName?.toLowerCase().includes(search.toLowerCase())
     );
   }
 
-  // Pagination
   const startIndex = (page - 1) * limit;
   const endIndex = startIndex + limit;
   const paginated = filtered.slice(startIndex, endIndex);
@@ -53,7 +51,7 @@ app.get('/api/products', (req, res) => {
   });
 });
 
-// Start the server once
+// Start the server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

@@ -4,12 +4,11 @@ import {
   FaSearch,
   FaShoppingCart,
   FaHome,
-  FaThLarge,
   FaClipboardList,
+  FaUser,
 } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
-// Categories exactly matching backend data Category fields + 'All'
 const categories = ['All', 'Dishwash', 'Home Fragrance', 'Floor Cleaner', 'Toilet Cleaner'];
 
 const Home = () => {
@@ -23,32 +22,51 @@ const Home = () => {
   const [totalPages, setTotalPages] = useState(1);
   const limit = 5;
 
-  // Fetch products from backend API with pagination, category and search filters
+  // ✅ Check for token
+  useEffect(() => {
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+      navigate('/login');
+    }
+  }, [navigate]);
+
+  // ✅ Sync cart from localStorage
+  useEffect(() => {
+    const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
+    setCart(storedCart);
+  }, []);
+
+  // ✅ Fetch Products
   useEffect(() => {
     const categoryQuery = selectedCategory !== 'All' ? `&category=${encodeURIComponent(selectedCategory)}` : '';
     const searchQuery = searchTerm ? `&search=${encodeURIComponent(searchTerm)}` : '';
+    const token = sessionStorage.getItem('token');
 
-    fetch(`http://localhost:5000/api/products?page=${page}&limit=${limit}${categoryQuery}${searchQuery}`)
+    fetch(`http://localhost:5000/api/products?page=${page}&limit=${limit}${categoryQuery}${searchQuery}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((res) => {
-        if (!res.ok) throw new Error('Network response was not ok');
+        if (!res.ok) throw new Error('Failed to fetch products');
         return res.json();
       })
       .then((data) => {
         setProducts(data.products);
         setTotalPages(data.totalPages);
       })
-      .catch((err) => console.error('Error fetching products:', err));
+      .catch((err) => console.error('Fetch error:', err));
   }, [page, selectedCategory, searchTerm]);
 
-  // Add to cart, avoid duplicates if needed
   const handleAddToCart = (product) => {
-    setCart((prev) => {
-      if (prev.find((p) => p.Barcode === product.Barcode)) return prev; // avoid duplicates
-      return [...prev, product];
-    });
+    const existingCart = JSON.parse(localStorage.getItem('cart')) || [];
+    if (existingCart.find((p) => p.Barcode === product.Barcode)) return;
+
+    const updatedCart = [...existingCart, product];
+    localStorage.setItem('cart', JSON.stringify(updatedCart));
+    setCart(updatedCart);
   };
 
-  // Navigation to product details
   const goToProductDetails = (product) => {
     navigate(`/product/${product.Barcode}`, { state: { product } });
   };
@@ -66,7 +84,7 @@ const Home = () => {
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
-              setPage(1); // reset page on search
+              setPage(1);
             }}
           />
         </div>
@@ -97,7 +115,7 @@ const Home = () => {
             className={`category-chip ${selectedCategory === cat ? 'active' : ''}`}
             onClick={() => {
               setSelectedCategory(cat);
-              setPage(1); // reset page on category change
+              setPage(1);
             }}
           >
             {cat}
@@ -147,22 +165,20 @@ const Home = () => {
         )}
       </div>
 
-      {/* Pagination Controls */}
+      {/* Pagination */}
       <div className="pagination">
         <button
-          onClick={() => setPage((p) => Math.max(p - 1, 1))}
-          disabled={page === 1}
-          className="pagination-btn"
+          disabled={page <= 1}
+          onClick={() => setPage((prev) => Math.max(1, prev - 1))}
         >
-          Prev
+          Previous
         </button>
-        <span className="pagination-info">
-          Page {page} / {totalPages}
+        <span>
+          Page {page} of {totalPages}
         </span>
         <button
-          onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
-          disabled={page === totalPages}
-          className="pagination-btn"
+          disabled={page >= totalPages}
+          onClick={() => setPage((prev) => Math.min(totalPages, prev + 1))}
         >
           Next
         </button>
@@ -170,21 +186,13 @@ const Home = () => {
 
       {/* Bottom Navigation */}
       <div className="bottom-nav">
-        <div
-          className="nav-item"
-          onClick={() => navigate('/')}
-          style={{ cursor: 'pointer' }}
-        >
+        <div onClick={() => navigate('/home')} className="nav-item">
           <FaHome />
-          <p>Home</p>
+          <span>Home</span>
         </div>
-        <div
-          className="nav-item"
-          onClick={() => navigate('/categories')}
-          style={{ cursor: 'pointer' }}
-        >
-          <FaThLarge />
-          <p>Category</p>
+        <div onClick={() => navigate('/Customerprofile')} className="nav-item">
+          <FaUser />
+          <span>Profile</span>
         </div>
       </div>
     </div>
