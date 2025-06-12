@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const Address = require('../models/Address');
 
-exports.saveAddress = async (req, res) => {
+// Save Address
+const saveAddress = async (req, res) => {
   try {
     const newAddress = new Address({
       user_id: new mongoose.Types.ObjectId(req.user.id),
@@ -22,7 +23,8 @@ exports.saveAddress = async (req, res) => {
   }
 };
 
-exports.updateAddress = async (req, res) => {
+// Update Address
+const updateAddress = async (req, res) => {
   try {
     const addressId = new mongoose.Types.ObjectId(req.params.id);
 
@@ -51,7 +53,8 @@ exports.updateAddress = async (req, res) => {
   }
 };
 
-exports.getAddresses = async (req, res) => {
+// Get All Addresses for User
+const getAddresses = async (req, res) => {
   try {
     const userId = new mongoose.Types.ObjectId(req.user.id);
     const addresses = await Address.find({ user_id: userId });
@@ -61,7 +64,8 @@ exports.getAddresses = async (req, res) => {
   }
 };
 
-exports.getAddressById = async (req, res) => {
+// Get Address by ID
+const getAddressById = async (req, res) => {
   try {
     const userId = new mongoose.Types.ObjectId(req.user.id);
     const addressId = new mongoose.Types.ObjectId(req.params.id);
@@ -79,4 +83,34 @@ exports.getAddressById = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: 'Error fetching address', error: err.message });
   }
+};
+
+// Delete Address
+const deleteAddress = async (req, res) => {
+  try {
+    const userId = new mongoose.Types.ObjectId(req.user.id);
+    const addressId = new mongoose.Types.ObjectId(req.params.id);
+
+    const deleted = await Address.findOneAndDelete({
+      _id: addressId,
+      user_id: userId,
+    });
+
+    if (!deleted) {
+      return res.status(404).json({ message: 'Address not found or no permission to delete.' });
+    }
+
+    res.status(200).json({ message: 'Address deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ message: 'Error deleting address', error: err.message });
+  }
+};
+
+// Export all controller functions
+module.exports = {
+  saveAddress,
+  updateAddress,
+  getAddresses,
+  getAddressById,
+  deleteAddress,
 };

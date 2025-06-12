@@ -1,76 +1,76 @@
-.profile-container { 
-  min-height: 100vh; 
-  background-color: #f4f4f4; 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
-} 
- 
-.profile-card { 
-  background-color: white; 
-  border-radius: 16px; 
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); 
-  padding: 30px 25px; 
-  max-width: 400px; 
-  width: 90%; 
-} 
- 
-.profile-header { 
-  text-align: center; 
-  margin-bottom: 30px; 
-} 
- 
-.profile-icon { 
-  font-size: 64px; 
-  color: #888; 
-  margin-bottom: 10px; 
-} 
- 
-.profile-name { 
-  font-size: 22px; 
-  font-weight: 600; 
-  color: #333; 
-} 
- 
-.profile-email { 
-  font-size: 14px; 
-  color: #666; 
-} 
- 
-.profile-options { 
-  display: flex; 
-  flex-direction: column; 
-  gap: 15px; 
-  margin-bottom: 25px; 
-} 
- 
-.profile-options button { 
-  background-color: #e0e7ff; 
-  color: #1e40af; 
-  border: none; 
-  padding: 12px; 
-  border-radius: 10px; 
-  font-weight: 500; 
-  cursor: pointer; 
-  transition: background 0.3s; 
-} 
- 
-.profile-options button:hover { 
-  background-color: #c7d2fe; 
-} 
- 
-.logout-section button { 
-  background-color: #ef4444; 
-  color: white; 
-  border: none; 
-  padding: 12px; 
-  width: 100%; 
-  border-radius: 10px; 
-  font-weight: 600; 
-  cursor: pointer; 
-  
-} 
- 
-.logout-section button:hover { 
-  background-color: #dc2626; 
+.profile-container {
+  min-height: 100vh;
+  background-color: #f4f4f4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.profile-card {
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  padding: 30px 25px;
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+}
+
+.profile-header {
+  margin-bottom: 30px;
+}
+
+.profile-icon {
+  font-size: 64px;
+  color: #007bff;
+  margin-bottom: 10px;
+}
+
+.profile-name {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.profile-email {
+  font-size: 14px;
+  color: #666;
+}
+
+.profile-options {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.profile-options button,
+.logout-section button {
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 500;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.profile-options button {
+  background-color: #e0e7ff;
+  color: #1e40af;
+}
+
+.profile-options button:hover {
+  background-color: #c7d2fe;
+}
+
+.logout-section button {
+  background-color: #ef4444;
+  color: white;
+}
+
+.logout-section button:hover {
+  background-color: #dc2626;
 }
