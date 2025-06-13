@@ -15,6 +15,7 @@ const DeliveryAddress = () => {
     house_building_name: '',
     street_area: '',
     landmark: '',
+    locality: '',
     city: '',
     state: '',
     pincode: ''
@@ -49,6 +50,7 @@ const DeliveryAddress = () => {
       house_building_name: '',
       street_area: '',
       landmark: '',
+      locality: '',
       city: '',
       state: '',
       pincode: ''
@@ -56,56 +58,153 @@ const DeliveryAddress = () => {
     setEditing(null);
     setLocationAllowed(false);
   };
-const handleSubmit = async () => {
-  const token = localStorage.getItem('token');
-  const method = editing ? 'PUT' : 'POST';
-  const url = editing
-    ? `http://localhost:5000/api/address/${editing._id}`
-    : `http://localhost:5000/api/address`;
 
-  // 🔍 Build full address to fetch lat/lon
-  const addressString = `${formData.house_building_name}, ${formData.street_area}, ${formData.landmark}, ${formData.city}, ${formData.pincode}, ${formData.state}, India`;
+  const fetchCoordinatesWithFallback = async (locality, city, state, pincode) => {
+    const queries = [
+      `${locality}, ${city}, ${state}, ${pincode}, India`,
+      `${city}, ${state}, ${pincode}, India`,
+      `${city}, ${state}, India`,
+      `${state}, India`
+    ];
 
-  try {
-    // 🌐 Get coordinates
-    const geoRes = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(addressString)}`);
-    const geoData = await geoRes.json();
-    const latitude = geoData[0]?.lat || null;
-    const longitude = geoData[0]?.lon || null;
+    const API_KEY = "pk.75a44cd578adf726a3c447795496e4b7";
 
-    const dataToSend = {
-      ...formData,
-      latitude,
-      longitude
-    };
+    for (let query of queries) {
+      const response = await fetch(`https://us1.locationiq.com/v1/search.php?key=${API_KEY}&format=json&q=${encodeURIComponent(query)}`);
+      const data = await response.json();
+      if (data && data.length > 0) return data[0];
+    }
+    return null;
+  };
 
-    const res = await fetch(url, {
-      method,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify(dataToSend)
-    });
-
-    const data = await res.json();
-
-    if (editing) {
-      setSavedAddresses(prev =>
-        prev.map(a => (a._id === editing._id ? data.data || data : a))
-      );
-    } else {
-      setSavedAddresses(prev => [...prev, data.data || data]);
+  const checkPincodeRadius = async () => {
+    const { pincode, locality, city, state } = formData;
+    if (!pincode || !locality || !city || !state) {
+      alert("❌ Please fill Pincode, City, Locality, and State before checking delivery.");
+      return;
     }
 
-    resetForm();
-    setShowForm(false);
-  } catch (err) {
-    console.error('Error submitting address:', err);
-    alert("❌ Failed to save address with location");
-  }
-};
+    const API_KEY = "pk.75a44cd578adf726a3c447795496e4b7";
+    const query = `${locality}, ${city}, ${state}, ${pincode}, India`;
 
+    try {
+      const response = await fetch(`https://us1.locationiq.com/v1/search.php?key=${API_KEY}&format=json&q=${encodeURIComponent(query)}`);
+      const results = await response.json();
+
+      if (!results || results.length === 0) {
+        alert("❌ Could not find coordinates for this address.");
+        return;
+      }
+
+      const matchedLocation = results[0];
+      const userLat = parseFloat(matchedLocation.lat);
+      const userLng = parseFloat(matchedLocation.lon);
+
+      const storeRes = await fetch("http://localhost:5000/admin/get-store");
+      const store = await storeRes.json();
+      const storeLat = parseFloat(store.latitude);
+      const storeLng = parseFloat(store.longitude);
+      const deliveryRadius = parseFloat(store.deliveryRadius);
+
+      const toRad = (val) => (val * Math.PI) / 180;
+      const R = 6371;
+      const dLat = toRad(storeLat - userLat);
+      const dLon = toRad(storeLng - userLng);
+      const a = Math.sin(dLat / 2) ** 2 +
+        Math.cos(toRad(userLat)) * Math.cos(toRad(storeLat)) *
+        Math.sin(dLon / 2) ** 2;
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      const distance = R * c;
+
+      if (distance > deliveryRadius) {
+        alert(`❌ Sorry, this location is outside our delivery area (~${distance.toFixed(2)} km).`);
+        return;
+      }
+
+      alert("✅ This location is serviceable. Please enter your full address.");
+      setLocationAllowed(true);
+    } catch (err) {
+      console.error("Error checking pincode:", err);
+      alert("❌ Error checking location.");
+    }
+  };
+
+  const handleSubmit = async () => {
+    const { phone_no, full_name, house_building_name, street_area } = formData;
+
+    if (!full_name || !phone_no || !house_building_name || !street_area) {
+      alert("❌ Please fill all the required fields before saving.");
+      return;
+    }
+
+    if (!/^\d{10}$/.test(phone_no)) {
+      alert("❌ Please enter a valid 10-digit mobile number.");
+      return;
+    }
+
+    const token = localStorage.getItem('token');
+    const method = editing ? 'PUT' : 'POST';
+    const url = editing
+      ? `http://localhost:5000/api/address/${editing._id}`
+      : `http://localhost:5000/api/address`;
+
+    try {
+      const geoData = await fetchCoordinatesWithFallback(formData.locality, formData.city, formData.state, formData.pincode);
+      if (!geoData) {
+        alert("❌ Invalid address. Could not get exact coordinates.");
+        return;
+      }
+
+      const latitude = geoData.lat;
+      const longitude = geoData.lon;
+
+      const storeRes = await fetch("http://localhost:5000/admin/get-store");
+      const store = await storeRes.json();
+      const storeLat = parseFloat(store.latitude);
+      const storeLng = parseFloat(store.longitude);
+      const deliveryRadius = parseFloat(store.deliveryRadius);
+
+      const userLat = parseFloat(latitude);
+      const userLng = parseFloat(longitude);
+
+      const toRad = (val) => (val * Math.PI) / 180;
+      const R = 6371;
+      const dLat = toRad(storeLat - userLat);
+      const dLon = toRad(storeLng - userLng);
+      const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(userLat)) * Math.cos(toRad(storeLat)) * Math.sin(dLon / 2) ** 2;
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      const distance = R * c;
+
+      if (distance > deliveryRadius) {
+        alert(`❌ Address is outside the delivery area (~${distance.toFixed(2)} km).`);
+        return;
+      }
+
+      const dataToSend = { ...formData, latitude, longitude };
+
+      const res = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(dataToSend)
+      });
+
+      const data = await res.json();
+      if (editing) {
+        setSavedAddresses(prev => prev.map(a => (a._id === editing._id ? data.data || data : a)));
+      } else {
+        setSavedAddresses(prev => [...prev, data.data || data]);
+      }
+
+      resetForm();
+      setShowForm(false);
+    } catch (err) {
+      console.error('Error saving address:', err);
+      alert("❌ Could not validate or save the address.");
+    }
+  };
 
   const handleDelete = async (id) => {
     const token = localStorage.getItem('token');
@@ -122,51 +221,6 @@ const handleSubmit = async () => {
     }
   };
 
-  const checkPincodeRadius = async () => {
-    const pincode = formData.pincode.trim();
-    if (!pincode) return alert("Please enter a valid pincode");
-
-    try {
-      const geoRes = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(pincode)}`
-      );
-      const geoData = await geoRes.json();
-
-      if (geoData.length === 0) return alert("❌ No location found for this pincode");
-
-      const userLat = parseFloat(geoData[0].lat);
-      const userLng = parseFloat(geoData[0].lon);
-
-      const storeRes = await fetch('http://localhost:5000/admin/get-store');
-      const store = await storeRes.json();
-
-      const distance = calculateDistance(userLat, userLng, store.latitude, store.longitude);
-
-      if (distance <= store.deliveryRadius) {
-        setLocationAllowed(true);
-        alert(`✅ Delivery available (~${distance.toFixed(2)} km)`);
-      } else {
-        alert(`❌ You're outside the delivery area (~${distance.toFixed(2)} km)`);
-      }
-    } catch (err) {
-      console.error("Error checking delivery area:", err);
-      alert("❌ Could not validate delivery location.");
-    }
-  };
-
-  const calculateDistance = (lat1, lon1, lat2, lon2) => {
-    const toRad = val => (val * Math.PI) / 180;
-    const R = 6371;
-    const dLat = toRad(lat2 - lat1);
-    const dLon = toRad(lon2 - lon1);
-    const a =
-      Math.sin(dLat / 2) ** 2 +
-      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-      Math.sin(dLon / 2) ** 2;
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
-  };
-
   return (
     <div className="address-container">
       {!showForm ? (
@@ -175,9 +229,7 @@ const handleSubmit = async () => {
             <h2>📬 Your Saved Addresses</h2>
             <div>
               <button className="primary" onClick={() => setShowForm(true)}>➕ Add New</button>
-              <button className="secondary" onClick={() => navigate('/check-location')}>
-                📍 Check Delivery Location
-              </button>
+              <button className="secondary" onClick={() => navigate('/check-location')}>📍 Check Delivery Location</button>
             </div>
           </div>
 
@@ -189,10 +241,7 @@ const handleSubmit = async () => {
                 <div key={address._id} className="address-card">
                   <h3>{address.full_name}</h3>
                   <p>{address.phone_no}</p>
-                  <p>
-                    {address.house_building_name}, {address.street_area},<br />
-                    {address.city}, {address.state} - {address.pincode}
-                  </p>
+                  <p>{address.house_building_name}, {address.street_area},<br />{address.city},  {address.locality && <>{address.locality}, </>}{address.state} - {address.pincode}</p>
                   {address.landmark && <p><em>Landmark:</em> {address.landmark}</p>}
                   <div className="address-actions">
                     <button className="primary" onClick={() => {
@@ -211,21 +260,14 @@ const handleSubmit = async () => {
       ) : (
         <div className="address-form">
           <h2>{editing ? '✏️ Edit Address' : '➕ Add New Address'}</h2>
-
           {!locationAllowed ? (
-            <>
-              <div className="pincode-check">
-                <input
-                  name="pincode"
-                  placeholder="Enter Pincode"
-                  value={formData.pincode}
-                  onChange={handleChange}
-                />
-                <button className="autofill-btn" onClick={checkPincodeRadius}>
-                  🚚 Check Delivery Availability
-                </button>
-              </div>
-            </>
+            <div className="pincode-check">
+              <input name="pincode" placeholder="Enter Pincode" value={formData.pincode} onChange={handleChange} />
+              <input name="city" placeholder="Enter City" value={formData.city} onChange={handleChange} />
+              <input name="locality" placeholder="Enter Locality" value={formData.locality} onChange={handleChange} />
+              <input name="state" placeholder="Enter State" value={formData.state} onChange={handleChange} />
+              <button className="autofill-btn" onClick={checkPincodeRadius}>🚚 Check Delivery Availability</button>
+            </div>
           ) : (
             <>
               <div className="form-grid">
@@ -234,21 +276,14 @@ const handleSubmit = async () => {
                 <input name="house_building_name" placeholder="House/Building Name" value={formData.house_building_name} onChange={handleChange} />
                 <input name="street_area" placeholder="Street/Area" value={formData.street_area} onChange={handleChange} />
                 <input name="landmark" placeholder="Landmark (Optional)" value={formData.landmark} onChange={handleChange} />
-                <input name="city" placeholder="City" value={formData.city} onChange={handleChange} />
-                <input name="state" placeholder="State" value={formData.state} onChange={handleChange} />
+                <input name="locality" placeholder="Locality" value={formData.locality} onChange={handleChange} disabled />
+                <input name="city" placeholder="City" value={formData.city} onChange={handleChange} disabled />
+                <input name="state" placeholder="State" value={formData.state} onChange={handleChange} disabled />
                 <input name="pincode" placeholder="Pincode" value={formData.pincode} disabled />
               </div>
-
               <div className="form-actions">
-                <button className="success" onClick={handleSubmit}>
-                  {editing ? 'Update Address' : 'Save Address'}
-                </button>
-                <button className="secondary" onClick={() => {
-                  resetForm();
-                  setShowForm(false);
-                }}>
-                  Cancel
-                </button>
+                <button className="success" onClick={handleSubmit}>{editing ? 'Update Address' : 'Save Address'}</button>
+                <button className="secondary" onClick={() => { resetForm(); setShowForm(false); }}>Cancel</button>
               </div>
             </>
           )}

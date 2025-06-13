@@ -38,22 +38,35 @@ const getCoordinatesFromAddress = async (addressString) => {
     return { latitude: null, longitude: null };
   }
 };
-
 // ✅ Save Address
 const saveAddress = async (req, res) => {
   try {
-    const { full_name, phone_no, house_building_name, street_area, city, pincode, state, landmark } = req.body;
-    const addressString = `${house_building_name}, ${street_area}, ${city}, ${pincode}, ${state}, India`;
+    const {
+      full_name,
+      phone_no,
+      house_building_name,
+      street_area,
+      locality, // ✅ 1. Extract locality
+      city,
+      pincode,
+      state,
+      landmark
+    } = req.body;
+
+    // ✅ 2. Include locality in the address string for geocoding
+    const addressString = `${house_building_name}, ${street_area}, ${locality}, ${city}, ${pincode}, ${state}, India`;
 
     const { latitude, longitude } = await getCoordinatesFromAddress(addressString);
     console.log("📌 Final Coordinates for save:", latitude, longitude);
 
+    // ✅ 3. Include locality in the address document
     const newAddress = new Address({
       user_id: new mongoose.Types.ObjectId(req.user.id),
       full_name,
       phone_no,
       house_building_name,
       street_area,
+      locality, // ✅ Include locality
       city,
       pincode,
       state,
