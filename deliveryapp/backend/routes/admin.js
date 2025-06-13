@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 
 // Define model schema for "settings"
 const Setting = mongoose.model(
-  'Setting',
+  'Settings',
   new mongoose.Schema({
     storeName: String,
     address: String,

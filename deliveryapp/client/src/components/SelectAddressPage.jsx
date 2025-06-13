@@ -8,62 +8,70 @@ const SelectAddressPage = () => {
   const grandTotal = location.state?.grandTotal || 0;
 
   const [savedAddresses, setSavedAddresses] = useState([]);
-  const [selectedAddress, setSelectedAddress] = useState(null);
+  const [selectedAddressId, setSelectedAddressId] = useState(null);
 
   useEffect(() => {
     const fetchAddresses = async () => {
       const token = localStorage.getItem('token');
-      const res = await fetch('http://localhost:5000/api/address', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const data = await res.json();
-      setSavedAddresses(data.data || data);
+      try {
+        const res = await fetch('http://localhost:5000/api/address', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await res.json();
+        setSavedAddresses(data.data || data);
+      } catch (error) {
+        console.error('❌ Failed to fetch addresses:', error);
+      }
     };
     fetchAddresses();
   }, []);
 
   const validateAndPay = async () => {
-    const storeRes = await fetch('http://localhost:5000/admin/get-store');
-    const store = await storeRes.json();
-    const { latitude: storeLat, longitude: storeLng, deliveryRadius } = store;
-
-    let userLat = null, userLng = null;
-
-    if (selectedAddress === 'current') {
-      await new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(pos => {
-          userLat = pos.coords.latitude;
-          userLng = pos.coords.longitude;
-          resolve();
-        }, reject);
-      });
-    } else if (selectedAddress) {
-      userLat = selectedAddress.latitude;
-      userLng = selectedAddress.longitude;
-    } else {
+    if (!selectedAddressId) {
       alert('❗ Please select a delivery address.');
       return;
     }
 
-    const toRad = (value) => (value * Math.PI) / 180;
+    const address = savedAddresses.find((a) => a._id === selectedAddressId);
+
+    // Debug logs
+    console.log("Selected Address:", address);
+    console.log("Latitude:", address?.latitude, "Longitude:", address?.longitude);
+
+    const userLat = Number(address?.latitude);
+    const userLng = Number(address?.longitude);
+
+    if (!userLat || !userLng || isNaN(userLat) || isNaN(userLng)) {
+      alert('❌ Address is missing or has invalid coordinates.');
+      return;
+    }
+
+    // Fetch store details
+    const storeRes = await fetch('http://localhost:5000/admin/get-store');
+    const store = await storeRes.json();
+    const { latitude: storeLat, longitude: storeLng, deliveryRadius } = store;
+
+    // Calculate distance using Haversine formula
+    const toRad = (val) => (val * Math.PI) / 180;
     const R = 6371;
     const dLat = toRad(storeLat - userLat);
     const dLon = toRad(storeLng - userLng);
     const a =
       Math.sin(dLat / 2) ** 2 +
-      Math.cos(toRad(userLat)) *
-        Math.cos(toRad(storeLat)) *
-        Math.sin(dLon / 2) ** 2;
+      Math.cos(toRad(userLat)) * Math.cos(toRad(storeLat)) * Math.sin(dLon / 2) ** 2;
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c;
 
+    console.log(`📏 Distance: ${distance.toFixed(2)} km | Allowed: ${deliveryRadius} km`);
+
     if (distance > deliveryRadius) {
-      alert(`❌ Selected location is outside delivery area (~${distance.toFixed(2)} km)`);
+      alert(`❌ Selected address is outside delivery area (~${distance.toFixed(2)} km)`);
       return;
     }
 
+    // Proceed to Razorpay
     const options = {
-      key: 'YOUR_RAZORPAY_KEY_ID',
+      key: 'YOUR_RAZORPAY_KEY_ID', // Replace with your Razorpay key
       amount: grandTotal * 100,
       currency: 'INR',
       name: 'DatCarts Delivery',
@@ -97,7 +105,8 @@ const SelectAddressPage = () => {
             <input
               type="radio"
               name="selectedAddress"
-              onChange={() => setSelectedAddress(address)}
+              value={address._id}
+              onChange={() => setSelectedAddressId(address._id)}
             />
             <label>
               {address.full_name}, {address.city}, {address.state} - {address.pincode}
@@ -106,24 +115,9 @@ const SelectAddressPage = () => {
         ))
       )}
 
-      <div className="current-location-option">
-        <input
-          type="radio"
-          name="selectedAddress"
-          value="current"
-          onChange={() => setSelectedAddress('current')}
-        />
-        <label>📍 Use My Current Location</label>
-      </div>
-
       <div className="manage-address-info">
-        <p className="manage-msg">
-          Want to add or edit addresses?
-        </p>
-        <button
-          className="manage-address-btn"
-          onClick={() => navigate('/DeliveryAddress')}
-        >
+        <p className="manage-msg">Want to add or edit addresses?</p>
+        <button className="manage-address-btn" onClick={() => navigate('/DeliveryAddress')}>
           ➕ Manage Address
         </button>
       </div>

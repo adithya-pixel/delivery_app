@@ -13,10 +13,10 @@ import DeliveryAddress from './components/DeliveryAddress';
 import SupportOptions from './components/SupportOption';
 import ProtectedRoute from './ProtectedRoute';
 import OrderConfirmation from './components/OrderConfirmation';
-import ProfileManagement from './components/ProfileManagement';
 import OrderSuccess from './OrderSuccess';
 import CheckDeliveryLocation from './components/CheckDeliveryLocation';
-import SelectAddressPage from './SelectAddressPage';
+import SelectAddressPage from './components/SelectAddressPage';
+
 
 function App() {
   return (

@@ -1,14 +1,80 @@
-button {
-  border: none;
-  padding: 10px 14px;
-  border-radius: 6px;
-  margin: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.2s ease;
+.address-container {
+  max-width: 720px;
+  margin: auto;
+  padding: 20px;
+  font-family: 'Segoe UI', sans-serif;
+  color: #333;
 }
 
-/* Primary - Blue */
+.address-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.address-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.address-card {
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.address-actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.address-form {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.pincode-check {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+input {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: 100%;
+}
+
+button {
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+/* Button styles */
 button.primary {
   background-color: #007bff;
   color: white;
@@ -17,7 +83,6 @@ button.primary:hover {
   background-color: #0056b3;
 }
 
-/* Danger - Red */
 button.danger {
   background-color: #dc3545;
   color: white;
@@ -26,7 +91,6 @@ button.danger:hover {
   background-color: #c82333;
 }
 
-/* Success - Green */
 button.success {
   background-color: #28a745;
   color: white;
@@ -35,11 +99,21 @@ button.success:hover {
   background-color: #218838;
 }
 
-/* Secondary - Grey */
 button.secondary {
   background-color: #6c757d;
   color: white;
 }
 button.secondary:hover {
   background-color: #5a6268;
+}
+
+.autofill-btn {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 12px;
+  border-radius: 6px;
+}
+
+.autofill-btn:hover {
+  background-color: #3e8e41;
 }
