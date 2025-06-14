@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './DeliveryAddress.css';
-import { useNavigate } from 'react-router-dom';
 
 const DeliveryAddress = () => {
-  const navigate = useNavigate();
   const [savedAddresses, setSavedAddresses] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
@@ -229,7 +227,6 @@ const DeliveryAddress = () => {
             <h2>📬 Your Saved Addresses</h2>
             <div>
               <button className="primary" onClick={() => setShowForm(true)}>➕ Add New</button>
-              <button className="secondary" onClick={() => navigate('/check-location')}>📍 Check Delivery Location</button>
             </div>
           </div>
 
@@ -241,7 +238,7 @@ const DeliveryAddress = () => {
                 <div key={address._id} className="address-card">
                   <h3>{address.full_name}</h3>
                   <p>{address.phone_no}</p>
-                  <p>{address.house_building_name}, {address.street_area},<br />{address.city},  {address.locality && <>{address.locality}, </>}{address.state} - {address.pincode}</p>
+                  <p>{address.house_building_name}, {address.street_area},<br />{address.city}, {address.locality && <>{address.locality}, </>}{address.state} - {address.pincode}</p>
                   {address.landmark && <p><em>Landmark:</em> {address.landmark}</p>}
                   <div className="address-actions">
                     <button className="primary" onClick={() => {
@@ -276,9 +273,9 @@ const DeliveryAddress = () => {
                 <input name="house_building_name" placeholder="House/Building Name" value={formData.house_building_name} onChange={handleChange} />
                 <input name="street_area" placeholder="Street/Area" value={formData.street_area} onChange={handleChange} />
                 <input name="landmark" placeholder="Landmark (Optional)" value={formData.landmark} onChange={handleChange} />
-                <input name="locality" placeholder="Locality" value={formData.locality} onChange={handleChange} disabled />
-                <input name="city" placeholder="City" value={formData.city} onChange={handleChange} disabled />
-                <input name="state" placeholder="State" value={formData.state} onChange={handleChange} disabled />
+                <input name="locality" placeholder="Locality" value={formData.locality} disabled />
+                <input name="city" placeholder="City" value={formData.city} disabled />
+                <input name="state" placeholder="State" value={formData.state} disabled />
                 <input name="pincode" placeholder="Pincode" value={formData.pincode} disabled />
               </div>
               <div className="form-actions">
