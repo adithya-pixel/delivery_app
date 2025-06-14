@@ -54,6 +54,10 @@ app.get('/api/products', (req, res) => {
 // Import your admin route
 const adminRoutes = require('./routes/admin');
 app.use('/admin', adminRoutes); // Use it as /admin/get-store
+app.use('/api/orders', require('./routes/orders'));
+const feedbackRoutes = require('./routes/feedbackRoutes'); // ✅ Added feedback route import
+app.use('/api/feedback', feedbackRoutes); // ✅ Use feedback route
+
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

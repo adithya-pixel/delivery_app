@@ -35,13 +35,16 @@ const CartPage = () => {
     (acc, item) => acc + item.Price * (item.quantity || 1),
     0
   );
-  const gst = 0;
+
+  const gstRate = 0; // ✅ GST set to 0%
+  const gst = totalPrice * gstRate;
   const grandTotal = totalPrice + gst;
 
-  // ✅ Navigate to address page with grand total
   const goToAddressPage = () => {
     if (cartItems.length === 0) return;
-    navigate('/select-address', { state: { grandTotal } });
+    navigate('/select-address', {
+      state: { grandTotal, gst, totalPrice },
+    });
   };
 
   return (
@@ -71,7 +74,6 @@ const CartPage = () => {
           ))
         )}
 
-        {/* Price details */}
         <div className="price-details">
           <h3>Price Details</h3>
           <p>Total: ₹{totalPrice.toFixed(2)}</p>

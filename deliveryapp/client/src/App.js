@@ -4,7 +4,7 @@ import { UserProvider } from './UserContext';
 import Login from './components/Login';
 import Signup from './components/Signup';
 import Home from './components/Home';
-import Order from './components/Order';
+import Order from './components/OrderPage';
 import ProductDetails from './components/ProductDetails';
 import CartPage from './components/Cartpage';
 import Customerprofile from './components/Customerprofile';

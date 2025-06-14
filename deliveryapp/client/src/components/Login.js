@@ -54,20 +54,25 @@ const Login = () => {
       localStorage.setItem('token', userToken);
       sessionStorage.setItem('token', userToken);
 
-      // ✅ Save user data to context
+      // ✅ Save user data (including MongoDB user ID)
       const userData = {
         name: res.data.user?.name || res.data.name || email.split('@')[0],
         email: res.data.user?.email || email,
-        id: res.data.user?.id || res.data.userId,
+        id: res.data.user?._id || res.data.userId,
       };
 
+      // ✅ Save user ID for later use in placing orders
+      localStorage.setItem('userId', userData.id);
+
+      // ✅ Set user context
       login(userData);
 
-      toast.success('Login successful!', {
+      toast.success('✅ Login successful!', {
         position: "bottom-center",
         autoClose: 2000,
         onClose: () => navigate('/home'),
       });
+
     } catch (err) {
       const errorMessage = err.response?.data?.message || 'Login failed';
       toast.error(errorMessage, {

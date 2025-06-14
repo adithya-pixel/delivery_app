@@ -5,6 +5,9 @@ import './SelectAddressPage.css';
 const SelectAddressPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const totalPrice = location.state?.totalPrice || 0;
+  const gst = location.state?.gst || 0;
   const grandTotal = location.state?.grandTotal || 0;
 
   const [savedAddresses, setSavedAddresses] = useState([]);
@@ -17,80 +20,88 @@ const SelectAddressPage = () => {
         const res = await fetch('http://localhost:5000/api/address', {
           headers: { Authorization: `Bearer ${token}` },
         });
+
         const data = await res.json();
+        if (data.success === false) throw new Error(data.message);
         setSavedAddresses(data.data || data);
       } catch (error) {
-        console.error('❌ Failed to fetch addresses:', error);
+        console.error('❌ Failed to fetch addresses:', error.message);
+        alert('❌ Could not load your saved addresses.');
       }
     };
     fetchAddresses();
   }, []);
 
-  const validateAndPay = async () => {
+  const handlePlaceOrder = async () => {
     if (!selectedAddressId) {
       alert('❗ Please select a delivery address.');
       return;
     }
 
     const address = savedAddresses.find((a) => a._id === selectedAddressId);
-
-    // Debug logs
-    console.log("Selected Address:", address);
-    console.log("Latitude:", address?.latitude, "Longitude:", address?.longitude);
-
-    const userLat = Number(address?.latitude);
-    const userLng = Number(address?.longitude);
+    const userLat = parseFloat(address?.latitude);
+    const userLng = parseFloat(address?.longitude);
 
     if (!userLat || !userLng || isNaN(userLat) || isNaN(userLng)) {
-      alert('❌ Address is missing or has invalid coordinates.');
+      alert('❌ Selected address has invalid coordinates.');
       return;
     }
 
-    // Fetch store details
-    const storeRes = await fetch('http://localhost:5000/admin/get-store');
-    const store = await storeRes.json();
-    const { latitude: storeLat, longitude: storeLng, deliveryRadius } = store;
+    try {
+      const storeRes = await fetch('http://localhost:5000/admin/get-store');
+      const store = await storeRes.json();
 
-    // Calculate distance using Haversine formula
-    const toRad = (val) => (val * Math.PI) / 180;
-    const R = 6371;
-    const dLat = toRad(storeLat - userLat);
-    const dLon = toRad(storeLng - userLng);
-    const a =
-      Math.sin(dLat / 2) ** 2 +
-      Math.cos(toRad(userLat)) * Math.cos(toRad(storeLat)) * Math.sin(dLon / 2) ** 2;
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = R * c;
+      const { latitude: storeLat, longitude: storeLng, deliveryRadius } = store;
+      const toRad = (val) => (val * Math.PI) / 180;
+      const R = 6371;
 
-    console.log(`📏 Distance: ${distance.toFixed(2)} km | Allowed: ${deliveryRadius} km`);
+      const dLat = toRad(storeLat - userLat);
+      const dLon = toRad(storeLng - userLng);
 
-    if (distance > deliveryRadius) {
-      alert(`❌ Selected address is outside delivery area (~${distance.toFixed(2)} km)`);
-      return;
+      const a =
+        Math.sin(dLat / 2) ** 2 +
+        Math.cos(toRad(userLat)) * Math.cos(toRad(storeLat)) * Math.sin(dLon / 2) ** 2;
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      const distance = R * c;
+
+      if (distance > deliveryRadius) {
+        alert(`❌ Address is outside delivery area (~${distance.toFixed(2)} km)`);
+        return;
+      }
+
+      // ✅ Proceed to save order
+      const token = localStorage.getItem('token');
+      const userId = localStorage.getItem('userId');
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+      const orderPayload = {
+        user: userId,
+        addressId: selectedAddressId,
+        items: cart,
+        totalPrice,
+        gst,
+        grandTotal,
+        paymentStatus: 'Pending',
+      };
+
+      const orderRes = await fetch('http://localhost:5000/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(orderPayload),
+      });
+
+      if (!orderRes.ok) throw new Error('Order creation failed');
+
+      alert('✅ Order placed successfully!');
+      localStorage.removeItem('cart');
+      navigate('/order-success');
+    } catch (err) {
+      console.error('❌ Order failed:', err);
+      alert('❌ Order placement failed.');
     }
-
-    // Proceed to Razorpay
-    const options = {
-      key: 'YOUR_RAZORPAY_KEY_ID', // Replace with your Razorpay key
-      amount: grandTotal * 100,
-      currency: 'INR',
-      name: 'DatCarts Delivery',
-      description: 'Order Payment',
-      handler: function (response) {
-        alert('✅ Payment successful!\nPayment ID: ' + response.razorpay_payment_id);
-        localStorage.removeItem('cart');
-        navigate('/order-success');
-      },
-      prefill: {
-        name: 'Customer Name',
-        email: 'customer@example.com',
-        contact: '9999999999',
-      },
-      theme: { color: '#0ea5e9' },
-    };
-
-    const rzp = new window.Razorpay(options);
-    rzp.open();
   };
 
   return (
@@ -109,7 +120,8 @@ const SelectAddressPage = () => {
               onChange={() => setSelectedAddressId(address._id)}
             />
             <label>
-              {address.full_name}, {address.city}, {address.state} - {address.pincode}
+              <strong>{address.full_name}</strong>, {address.house_building_name}, {address.street_area},<br />
+              {address.locality}, {address.city} - {address.pincode}, {address.state}
             </label>
           </div>
         ))
@@ -122,8 +134,8 @@ const SelectAddressPage = () => {
         </button>
       </div>
 
-      <button className="pay-button" onClick={validateAndPay}>
-        Proceed to Pay ₹{grandTotal.toFixed(2)}
+      <button className="pay-button" onClick={handlePlaceOrder}>
+        Place Order ₹{grandTotal.toFixed(2)}
       </button>
     </div>
   );
