@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './SelectAddressPage.css';
+import { FaHome } from 'react-icons/fa';
 
 const SelectAddressPage = () => {
   const navigate = useNavigate();
@@ -20,7 +21,6 @@ const SelectAddressPage = () => {
         const res = await fetch('http://localhost:5000/api/address', {
           headers: { Authorization: `Bearer ${token}` },
         });
-
         const data = await res.json();
         if (data.success === false) throw new Error(data.message);
         setSavedAddresses(data.data || data);
@@ -69,7 +69,6 @@ const SelectAddressPage = () => {
         return;
       }
 
-      // ✅ Proceed to save order
       const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');
       const cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -109,23 +108,27 @@ const SelectAddressPage = () => {
       <h2 className="heading">Select Delivery Address</h2>
 
       {savedAddresses.length === 0 ? (
-        <p className="no-address-msg">No saved addresses available.</p>
-      ) : (
-        savedAddresses.map((address) => (
-          <div key={address._id} className="address-item">
-            <input
-              type="radio"
-              name="selectedAddress"
-              value={address._id}
-              onChange={() => setSelectedAddressId(address._id)}
-            />
-            <label>
-              <strong>{address.full_name}</strong>, {address.house_building_name}, {address.street_area},<br />
-              {address.locality}, {address.city} - {address.pincode}, {address.state}
-            </label>
-          </div>
-        ))
-      )}
+  <p className="no-address-msg">No saved addresses available.</p>
+) : (
+ <div className="address-grid">
+  {savedAddresses.map((address) => (
+    <div key={address._id} className="address-item">
+      <div className="address-details">
+        <strong>{address.full_name}</strong>, {address.house_building_name}, {address.street_area},<br />
+        {address.locality}, {address.city} - {address.pincode}, {address.state}
+      </div>
+      <input
+        type="radio"
+        name="selectedAddress"
+        value={address._id}
+        onChange={() => setSelectedAddressId(address._id)}
+      />
+    </div>
+  ))}
+</div>
+
+)}
+
 
       <div className="manage-address-info">
         <p className="manage-msg">Want to add or edit addresses?</p>
@@ -137,6 +140,14 @@ const SelectAddressPage = () => {
       <button className="pay-button" onClick={handlePlaceOrder}>
         Place Order ₹{grandTotal.toFixed(2)}
       </button>
+
+      {/* Bottom Navigation */}
+      <div className="bottom-nav">
+        <div onClick={() => navigate('/home')} className="nav-item">
+          <FaHome size={20} />
+          <span>Home</span>
+        </div>
+      </div>
     </div>
   );
 };

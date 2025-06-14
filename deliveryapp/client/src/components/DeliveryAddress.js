@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './DeliveryAddress.css';
+import { FaHome } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const DeliveryAddress = () => {
+  const navigate = useNavigate();
   const [savedAddresses, setSavedAddresses] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
@@ -64,9 +67,7 @@ const DeliveryAddress = () => {
       `${city}, ${state}, India`,
       `${state}, India`
     ];
-
     const API_KEY = "pk.75a44cd578adf726a3c447795496e4b7";
-
     for (let query of queries) {
       const response = await fetch(`https://us1.locationiq.com/v1/search.php?key=${API_KEY}&format=json&q=${encodeURIComponent(query)}`);
       const data = await response.json();
@@ -88,7 +89,6 @@ const DeliveryAddress = () => {
     try {
       const response = await fetch(`https://us1.locationiq.com/v1/search.php?key=${API_KEY}&format=json&q=${encodeURIComponent(query)}`);
       const results = await response.json();
-
       if (!results || results.length === 0) {
         alert("❌ Could not find coordinates for this address.");
         return;
@@ -108,9 +108,7 @@ const DeliveryAddress = () => {
       const R = 6371;
       const dLat = toRad(storeLat - userLat);
       const dLon = toRad(storeLng - userLng);
-      const a = Math.sin(dLat / 2) ** 2 +
-        Math.cos(toRad(userLat)) * Math.cos(toRad(storeLat)) *
-        Math.sin(dLon / 2) ** 2;
+      const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(userLat)) * Math.cos(toRad(storeLat)) * Math.sin(dLon / 2) ** 2;
       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       const distance = R * c;
 
@@ -286,6 +284,14 @@ const DeliveryAddress = () => {
           )}
         </div>
       )}
+
+      {/* Bottom Navigation */}
+      <div className="bottom-nav">
+        <div onClick={() => navigate('/home')} className="nav-item">
+          <FaHome size={20} />
+          <span>Home</span>
+        </div>
+      </div>
     </div>
   );
 };

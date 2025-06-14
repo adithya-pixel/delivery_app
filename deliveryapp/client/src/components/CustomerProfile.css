@@ -1,12 +1,22 @@
+/* Base layout wrapper */
 .profile-container {
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
   background-color: #f4f4f4;
+  padding-bottom: 70px; /* space for bottom nav */
+}
+
+/* Wrapper for centering the card */
+.content-wrapper {
+  flex: 1;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   padding: 20px;
 }
 
+/* Card design */
 .profile-card {
   background-color: white;
   border-radius: 16px;
@@ -17,6 +27,7 @@
   text-align: center;
 }
 
+/* Header */
 .profile-header {
   margin-bottom: 30px;
 }
@@ -39,6 +50,7 @@
   color: #666;
 }
 
+/* Options and buttons */
 .profile-options {
   display: flex;
   flex-direction: column;
@@ -73,4 +85,32 @@
 
 .logout-section button:hover {
   background-color: #dc2626;
+}
+
+/* Bottom nav bar */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #ffffff;
+  border-top: 1px solid #ddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60px;
+  z-index: 1000;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #333;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.nav-item:hover {
+  color: #007bff;
 }

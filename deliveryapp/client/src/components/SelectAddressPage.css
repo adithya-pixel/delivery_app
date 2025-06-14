@@ -1,83 +1,165 @@
+/* General container */
 .select-address-container {
-  padding: 20px;
-  max-width: 600px;
+  padding: 24px 16px 140px; /* enough bottom padding */
+  max-width: 1200px;
   margin: auto;
-  font-family: Arial, sans-serif;
+  font-family: 'Poppins', sans-serif;
+  background-color: #fefefe;
+  color: #333;
 }
 
+/* Page heading */
 .heading {
   font-size: 24px;
-  margin-bottom: 20px;
+  font-weight: 600;
+  color: #222;
   text-align: center;
+  margin-bottom: 24px;
 }
 
+/* No address message */
 .no-address-msg {
-  color: #555;
   font-size: 16px;
+  color: #999;
   text-align: center;
+  margin-top: 40px;
 }
 
+/* Grid layout for 3 addresses per row */
+.address-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(30%, 1fr));
+  gap: 20px;
+}
+
+/* Address card */
 .address-item {
-  margin-bottom: 12px;
-  padding: 10px;
-  border: 1px solid #e0e0e0;
-  border-radius: 6px;
-  background-color: #f9f9f9;
+  display: flex;
+  align-items: flex-start;
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: 0.2s;
 }
 
-.address-item input {
-  margin-right: 8px;
+.address-item:hover {
+  background-color: #f9fdff;
+  border-color: #0ea5e9;
 }
 
-.current-location-option {
-  margin-top: 16px;
-  padding: 10px;
-  border: 1px dashed #ccc;
-  border-radius: 6px;
-  background-color: #f0f8ff;
+.address-details {
+  flex: 1;
+  font-size: 14px;
+  line-height: 1.5;
+  padding-right: 12px;
 }
 
-.current-location-option input {
-  margin-right: 8px;
+.address-item input[type='radio'] {
+  accent-color: #0ea5e9;
+  transform: scale(1.2);
+  cursor: pointer;
+  margin-top: 4px;
 }
 
+/* Manage Address block */
 .manage-address-info {
-  margin-top: 20px;
   text-align: center;
+  margin-top: 30px;
 }
 
 .manage-msg {
   font-size: 14px;
-  color: #555;
+  color: #666;
   margin-bottom: 8px;
 }
 
-.manage-address-btn {
-  padding: 8px 16px;
-  font-size: 15px;
-  background-color: #38bdf8;
-  color: white;
+.manage-address-btn,
+.pay-button {
+  width: 220px;
+  padding: 10px 0;
+  font-size: 17px;
+  font-weight: 600;
   border: none;
-  border-radius: 6px;
+  border-radius: 10px;
   cursor: pointer;
+  display: block;
+  margin: 20px auto 0 auto;
+  text-align: center;
+  transition: background 0.3s, box-shadow 0.3s;
+}
+
+/* Individual colors and shadows */
+.manage-address-btn {
+  background-color: #0ea5e9;
+  color: white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .manage-address-btn:hover {
-  background-color: #0ea5e9;
+  background-color: #0284c7;
 }
 
 .pay-button {
-  margin-top: 30px;
-  padding: 12px 24px;
-  background-color: #0ea5e9;
+  background-color: #10b981;
   color: white;
-  font-size: 16px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  width: 100%;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
 }
 
 .pay-button:hover {
-  background-color: #0284c7;
+  background-color: #059669;
+}
+
+
+.pay-button:hover {
+  background-color: #059669;
+}
+
+/* Bottom Navigation */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: white;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 12px 0;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.04);
+  z-index: 100;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 12px;
+  color: #666;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.nav-item:hover {
+  color: #0ea5e9;
+}
+
+.nav-item svg {
+  font-size: 20px;
+  margin-bottom: 2px;
+}
+
+/* Responsive tweaks */
+@media (max-width: 1024px) {
+  .address-grid {
+    grid-template-columns: repeat(auto-fill, minmax(45%, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .address-grid {
+    grid-template-columns: 1fr;
+  }
 }

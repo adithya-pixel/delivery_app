@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './OrderSuccess.css'; 
+import { AiOutlineHome } from 'react-icons/ai'; // 👈 import home icon
+import './OrderSuccess.css';
 
 const OrderSuccess = () => {
   const navigate = useNavigate();
@@ -12,7 +13,9 @@ const OrderSuccess = () => {
       <p>Your payment has been received and your order is being processed.</p>
 
       <button className="success-home-btn" onClick={() => navigate('/home')}>
-        Back to Home
+        <AiOutlineHome size={24} style={{ marginRight: '6px' }} />
+        {/* Optional text beside icon */}
+        {/* <span>Home</span> */}
       </button>
     </div>
   );

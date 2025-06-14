@@ -1,9 +1,11 @@
-// SupportOptions.js
 import React, { useState } from 'react';
 import axios from 'axios';
+import { FaHome } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 import './SupportOption.css';
 
 const SupportOptions = () => {
+  const navigate = useNavigate();
   const [activeOption, setActiveOption] = useState(null);
   const [complaint, setComplaint] = useState('');
   const [submitted, setSubmitted] = useState(false);
@@ -37,9 +39,7 @@ const SupportOptions = () => {
 
       <div className="support-buttons">
         <button
-          className={`support-button contact-button ${
-            activeOption === 'contact' ? 'active' : ''
-          }`}
+          className={`support-button contact-button ${activeOption === 'contact' ? 'active' : ''}`}
           onClick={() => {
             setActiveOption('contact');
             setSubmitted(false);
@@ -49,9 +49,7 @@ const SupportOptions = () => {
         </button>
 
         <button
-          className={`support-button complaint-button ${
-            activeOption === 'complaint' ? 'active' : ''
-          }`}
+          className={`support-button complaint-button ${activeOption === 'complaint' ? 'active' : ''}`}
           onClick={() => {
             setActiveOption('complaint');
             setSubmitted(false);
@@ -87,6 +85,14 @@ const SupportOptions = () => {
             )}
           </div>
         )}
+      </div>
+
+      {/* Bottom navigation bar */}
+      <div className="bottom-nav">
+        <div className="nav-item" onClick={() => navigate('/home')}>
+          <FaHome size={22} />
+          <p>Home</p>
+        </div>
       </div>
     </div>
   );

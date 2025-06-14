@@ -30,3 +30,24 @@
 .success-home-btn:hover {
   background-color: #1d4ed8;
 }
+.success-home-btn {
+  margin-top: 24px;
+  padding: 12px 18px;
+  font-size: 16px;
+  font-weight: 500;
+  background-color: #0ea5e9;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.3s;
+}
+
+.success-home-btn:hover {
+  background-color: #0284c7;
+}

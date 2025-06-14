@@ -117,3 +117,29 @@ button.secondary:hover {
 .autofill-btn:hover {
   background-color: #3e8e41;
 }
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #f9f9f9;
+  border-top: 1px solid #ddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0;
+  z-index: 100;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #333;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.nav-item:hover {
+  color: #007bff;
+}
