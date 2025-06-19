@@ -1,3 +1,4 @@
+// SelectAddressPage.jsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './SelectAddressPage.css';
@@ -13,6 +14,7 @@ const SelectAddressPage = () => {
 
   const [savedAddresses, setSavedAddresses] = useState([]);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
+  const [showAllAddresses, setShowAllAddresses] = useState(false);
 
   useEffect(() => {
     const fetchAddresses = async () => {
@@ -23,7 +25,12 @@ const SelectAddressPage = () => {
         });
         const data = await res.json();
         if (data.success === false) throw new Error(data.message);
-        setSavedAddresses(data.data || data);
+        const addresses = data.data || data;
+        setSavedAddresses(addresses);
+        const defaultAddress = addresses.find((a) => a.isDefault);
+        if (defaultAddress) {
+          setSelectedAddressId(defaultAddress._id);
+        }
       } catch (error) {
         console.error('❌ Failed to fetch addresses:', error.message);
         alert('❌ Could not load your saved addresses.');
@@ -57,10 +64,11 @@ const SelectAddressPage = () => {
 
       const dLat = toRad(storeLat - userLat);
       const dLon = toRad(storeLng - userLng);
-
       const a =
         Math.sin(dLat / 2) ** 2 +
-        Math.cos(toRad(userLat)) * Math.cos(toRad(storeLat)) * Math.sin(dLon / 2) ** 2;
+        Math.cos(toRad(userLat)) *
+          Math.cos(toRad(storeLat)) *
+          Math.sin(dLon / 2) ** 2;
       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       const distance = R * c;
 
@@ -103,32 +111,60 @@ const SelectAddressPage = () => {
     }
   };
 
+  const defaultAddress = savedAddresses.find((a) => a.isDefault);
+  const otherAddresses = savedAddresses.filter((a) => !a.isDefault);
+
   return (
     <div className="select-address-container">
       <h2 className="heading">Select Delivery Address</h2>
 
-      {savedAddresses.length === 0 ? (
-  <p className="no-address-msg">No saved addresses available.</p>
-) : (
- <div className="address-grid">
-  {savedAddresses.map((address) => (
-    <div key={address._id} className="address-item">
-      <div className="address-details">
-        <strong>{address.full_name}</strong>, {address.house_building_name}, {address.street_area},<br />
-        {address.locality}, {address.city} - {address.pincode}, {address.state}
-      </div>
-      <input
-        type="radio"
-        name="selectedAddress"
-        value={address._id}
-        onChange={() => setSelectedAddressId(address._id)}
-      />
-    </div>
-  ))}
-</div>
+      {defaultAddress ? (
+        <div className="address-item">
+          <div className="address-details">
+            <strong>{defaultAddress.full_name}</strong>
+            <span className="default-label">✅ Default Address</span>
+            <br />
+            {defaultAddress.house_building_name}, {defaultAddress.street_area},<br />
+            {defaultAddress.locality}, {defaultAddress.city} - {defaultAddress.pincode}, {defaultAddress.state}
+          </div>
+          <input
+            type="radio"
+            name="selectedAddress"
+            value={defaultAddress._id}
+            checked={selectedAddressId === defaultAddress._id}
+            onChange={() => setSelectedAddressId(defaultAddress._id)}
+          />
+        </div>
+      ) : (
+        <p className="no-address-msg">No default address found.</p>
+      )}
 
-)}
+      {!showAllAddresses && otherAddresses.length > 0 && (
+        <button className="show-more-btn" onClick={() => setShowAllAddresses(true)}>
+          ➕ Choose Another Address
+        </button>
+      )}
 
+      {showAllAddresses && (
+        <div className="address-grid">
+          {otherAddresses.map((address) => (
+            <div key={address._id} className="address-item">
+              <div className="address-details">
+                <strong>{address.full_name}</strong><br />
+                {address.house_building_name}, {address.street_area},<br />
+                {address.locality}, {address.city} - {address.pincode}, {address.state}
+              </div>
+              <input
+                type="radio"
+                name="selectedAddress"
+                value={address._id}
+                checked={selectedAddressId === address._id}
+                onChange={() => setSelectedAddressId(address._id)}
+              />
+            </div>
+          ))}
+        </div>
+      )}
 
       <div className="manage-address-info">
         <p className="manage-msg">Want to add or edit addresses?</p>
@@ -141,7 +177,6 @@ const SelectAddressPage = () => {
         Place Order ₹{grandTotal.toFixed(2)}
       </button>
 
-      {/* Bottom Navigation */}
       <div className="bottom-nav">
         <div onClick={() => navigate('/home')} className="nav-item">
           <FaHome size={20} />

@@ -39,45 +39,36 @@ const Login = () => {
     e.preventDefault();
 
     if (!validateForm()) return;
-
     setLoading(true);
 
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/signin', {
-        email,
-        password,
-      });
+      const res = await axios.post('http://localhost:5000/api/auth/signin', { email, password });
 
-      const userToken = res.data.token;
+      // ✅ Store token in localStorage (must match ProtectedRoute)
+      localStorage.setItem('token', res.data.token);
 
-      // ✅ Save token securely
-      localStorage.setItem('token', userToken);
-      sessionStorage.setItem('token', userToken);
-
-      // ✅ Save user data (including MongoDB user ID)
+      // ✅ Set user data in context
       const userData = {
         name: res.data.user?.name || res.data.name || email.split('@')[0],
         email: res.data.user?.email || email,
-        id: res.data.user?._id || res.data.userId,
+        id: res.data.user?.id || res.data.userId,
       };
-
-      // ✅ Save user ID for later use in placing orders
-      localStorage.setItem('userId', userData.id);
-
-      // ✅ Set user context
       login(userData);
 
-      toast.success('✅ Login successful!', {
-        position: "bottom-center",
-        autoClose: 2000,
-        onClose: () => navigate('/home'),
+      // ✅ Immediate navigate after storing session
+      navigate('/home');
+
+      // ✅ Show success toast
+      toast.success('Login successful!', {
+        position: 'bottom-center',
+        autoClose: 3000,
       });
 
     } catch (err) {
       const errorMessage = err.response?.data?.message || 'Login failed';
       toast.error(errorMessage, {
-        position: "bottom-center",
-        autoClose: 5000,
+        position: 'bottom-center',
+        autoClose: 4000,
       });
     } finally {
       setLoading(false);
@@ -110,10 +101,7 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
               className={errors.password ? 'error' : ''}
             />
-            <span
-              className="password-toggle"
-              onClick={() => setShowPassword(!showPassword)}
-            >
+            <span className="password-toggle" onClick={() => setShowPassword(!showPassword)}>
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </span>
             {errors.password && <span className="error-message">{errors.password}</span>}
@@ -121,7 +109,7 @@ const Login = () => {
 
           <div className="forgot">
             <label><input type="checkbox" /> Remember me</label>
-            <Link to="#">Forgot Password?</Link>
+            <Link to="/forgot-password">Forgot Password?</Link>
           </div>
 
           <button type="submit" disabled={loading}>

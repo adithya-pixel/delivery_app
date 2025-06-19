@@ -11,8 +11,8 @@ module.exports = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.userId = decoded.id; // 👈 Now this will work in your order route
-    next();
+    req.userId = decoded.id; // 👈 Attach userId to request
+    next(); // ✅ Move to next middleware
   } catch (err) {
     return res.status(401).json({ error: 'Unauthorized: Invalid token' });
   }

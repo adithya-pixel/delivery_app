@@ -6,7 +6,7 @@ const {
   updateAddress,
   getAddresses,
   getAddressById,
-  deleteAddress, // 👈 Make sure this controller is defined
+  deleteAddress,
 } = require('../controllers/addressController');
 
 const verifyToken = require('../middlewares/verifyToken');
@@ -15,6 +15,6 @@ router.post('/', verifyToken, saveAddress);
 router.put('/:id', verifyToken, updateAddress);
 router.get('/', verifyToken, getAddresses);
 router.get('/:id', verifyToken, getAddressById);
-router.delete('/:id', verifyToken, deleteAddress); // 👈 Add this line
+router.delete('/:id', verifyToken, deleteAddress);
 
 module.exports = router;

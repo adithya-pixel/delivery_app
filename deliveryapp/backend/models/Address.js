@@ -10,7 +10,7 @@ const addressSchema = new mongoose.Schema({
   phone_no: { type: String, required: true, maxlength: 15 },
   house_building_name: { type: String, required: true, maxlength: 100 },
   street_area: { type: String, required: true, maxlength: 100 },
-  locality: { type: String, required: true, maxlength: 100 }, // ✅ Newly added field
+  locality: { type: String, required: true, maxlength: 100 },
   city: { type: String, required: true, maxlength: 100 },
   pincode: { type: String, required: true, maxlength: 10 },
   state: { type: String, required: true, maxlength: 100 },
@@ -18,6 +18,8 @@ const addressSchema = new mongoose.Schema({
 
   latitude: { type: Number, default: null },
   longitude: { type: Number, default: null },
+
+  isDefault: { type: Boolean, default: false } // ✅ Added field
 }, { timestamps: true });
 
 module.exports = mongoose.model('Address', addressSchema);
