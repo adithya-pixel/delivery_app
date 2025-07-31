@@ -63,12 +63,15 @@
 
 /* Input Fields */
 input {
-  padding: 12px;
+  padding: 10px 14px;
   border-radius: 8px;
   border: 1px solid #ccc;
   width: 100%;
-  font-size: 14px;
+  font-size: 15px;
+  height: 42px;
+  box-sizing: border-box;
 }
+
 
 input:focus {
   border-color: #007bff;
