@@ -9,6 +9,18 @@ import {
 } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
+// ✅ Debounce utility
+function useDebounce(value, delay) {
+  const [debounced, setDebounced] = useState(value);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(timer);
+  }, [value, delay]);
+
+  return debounced;
+}
+
 const categories = ['All', 'Dishwash', 'Home Fragrance', 'Floor Cleaner', 'Toilet Cleaner'];
 
 const Home = () => {
@@ -18,29 +30,28 @@ const Home = () => {
   const [cart, setCart] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
+  const debouncedSearch = useDebounce(searchTerm, 500); // ⏱️ Debounce added
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [storeSettings, setStoreSettings] = useState(null);
   const limit = 5;
 
-  // ✅ Check for token
   useEffect(() => {
-   const token = localStorage.getItem('token');
-
+    const token = localStorage.getItem('token');
     if (!token) {
       navigate('/login');
     }
   }, [navigate]);
 
-  // ✅ Sync cart from localStorage
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
     setCart(storedCart);
   }, []);
 
-  // ✅ Fetch Products
+  // ✅ FETCH with debounced searchTerm
   useEffect(() => {
     const categoryQuery = selectedCategory !== 'All' ? `&category=${encodeURIComponent(selectedCategory)}` : '';
-    const searchQuery = searchTerm ? `&search=${encodeURIComponent(searchTerm)}` : '';
+    const searchQuery = debouncedSearch.length >= 2 ? `&search=${encodeURIComponent(debouncedSearch)}` : '';
     const token = sessionStorage.getItem('token');
 
     fetch(`http://localhost:5000/api/products?page=${page}&limit=${limit}${categoryQuery}${searchQuery}`, {
@@ -57,7 +68,14 @@ const Home = () => {
         setTotalPages(data.totalPages);
       })
       .catch((err) => console.error('Fetch error:', err));
-  }, [page, selectedCategory, searchTerm]);
+  }, [page, selectedCategory, debouncedSearch]); // ✅ use debouncedSearch
+
+  useEffect(() => {
+    fetch('http://localhost:5000/api/settings')
+      .then((res) => res.json())
+      .then((data) => setStoreSettings(data))
+      .catch((err) => console.error('Settings fetch error:', err));
+  }, []);
 
   const handleAddToCart = (product) => {
     const existingCart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -73,15 +91,26 @@ const Home = () => {
   };
 
   return (
-    <div className="home-container" style={{ paddingBottom: 60 }}>
-      {/* Top Bar */}
+    <div className="home-container" style={{ paddingBottom: 80 }}>
+      {/* 🏪 Store Header + 🔍 Search */}
       <div className="top-bar">
+        <div className="store-header" onClick={() => navigate('/home')}>
+          {storeSettings?.logoUrl && (
+            <img
+              src={storeSettings.logoUrl.startsWith('http') ? storeSettings.logoUrl : `http://localhost:5000/${storeSettings.logoUrl}`}
+              alt="Store Logo"
+              className="store-logo"
+            />
+          )}
+          <h2 className="store-name">{storeSettings?.storeName || 'My Store'}</h2>
+        </div>
+
         <div className="search-container">
           <FaSearch className="top-icon" />
           <input
             type="text"
             className="search-bar"
-            placeholder="Search Product"
+            placeholder="Search Product or category"
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
@@ -89,26 +118,9 @@ const Home = () => {
             }}
           />
         </div>
-        <div className="icon-group">
-          <FaClipboardList
-            className="top-icon"
-            onClick={() => navigate('/order')}
-            style={{ cursor: 'pointer' }}
-            title="View Orders"
-          />
-          <div
-            className="cart-icon-wrapper"
-            onClick={() => navigate('/cart')}
-            style={{ cursor: 'pointer' }}
-            title="View Cart"
-          >
-            <FaShoppingCart className="top-icon" />
-            {cart.length > 0 && <span className="cart-badge">{cart.length}</span>}
-          </div>
-        </div>
       </div>
 
-      {/* Categories */}
+      {/* 🏷️ Category Filters */}
       <div className="categories">
         {categories.map((cat, idx) => (
           <button
@@ -124,7 +136,7 @@ const Home = () => {
         ))}
       </div>
 
-      {/* Product List */}
+      {/* 📦 Product List */}
       <div className="product-list">
         {products.length === 0 ? (
           <p className="no-products-msg">No products found.</p>
@@ -166,7 +178,7 @@ const Home = () => {
         )}
       </div>
 
-      {/* Pagination */}
+      {/* 🔁 Pagination */}
       <div className="pagination">
         <button
           disabled={page <= 1}
@@ -185,13 +197,27 @@ const Home = () => {
         </button>
       </div>
 
-      {/* Bottom Navigation */}
+      {/* 📱 Bottom Navigation Bar */}
       <div className="bottom-nav">
-        <div onClick={() => navigate('/home')} className="nav-item">
+        <div className="nav-item" onClick={() => navigate('/home')}>
           <FaHome />
           <span>Home</span>
         </div>
-        <div onClick={() => navigate('/Customerprofile')} className="nav-item">
+        <div className="nav-item" onClick={() => navigate('/order')}>
+          <FaClipboardList />
+          <span>Orders</span>
+        </div>
+       <div className="nav-item" onClick={() => navigate('/cart')}>
+  <div style={{ position: 'relative' }}>
+    <FaShoppingCart />
+    {cart.length > 0 && (
+      <span className="cart-badge">{cart.length}</span>
+    )}
+  </div>
+  <span>Cart</span>
+</div>
+
+        <div className="nav-item" onClick={() => navigate('/Customerprofile')}>
           <FaUser />
           <span>Profile</span>
         </div>

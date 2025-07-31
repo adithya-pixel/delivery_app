@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const Address = require('../models/Address');
-const fetch = require('node-fetch'); // Use node-fetch v2
+const fetch = require('node-fetch'); 
 
-// 🌍 Get Coordinates
+//  Get Coordinates
 const getCoordinatesFromAddress = async (addressString) => {
   const tryGeocode = async (query) => {
     const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`;

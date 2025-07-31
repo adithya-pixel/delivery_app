@@ -102,9 +102,14 @@ const SelectAddressPage = () => {
 
       if (!orderRes.ok) throw new Error('Order creation failed');
 
+      const orderData = await orderRes.json();
+      const newOrder = orderData.order || orderData;
+
       alert('✅ Order placed successfully!');
       localStorage.removeItem('cart');
-      navigate('/order-success');
+
+      // ⬇️ Redirect to the order details page
+      navigate(`/order/${newOrder._id}`, { state: { order: newOrder } });
     } catch (err) {
       console.error('❌ Order failed:', err);
       alert('❌ Order placement failed.');

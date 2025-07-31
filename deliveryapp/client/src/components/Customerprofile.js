@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaUserCircle } from 'react-icons/fa';
+import { FaUserCircle, FaHome } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../UserContext';
 import './CustomerProfile.css';
@@ -56,6 +56,11 @@ const Customerprofile = () => {
             <button onClick={() => navigate('/')}>Go to Login</button>
           </div>
         </div>
+
+        {/* Bottom Home Navigation */}
+        <div className="bottom-nav">
+          <FaHome className="nav-icon" onClick={() => navigate('/')} />
+        </div>
       </div>
     );
   }
@@ -78,6 +83,11 @@ const Customerprofile = () => {
         <div className="logout-section">
           <button onClick={handleLogout}>Log Out</button>
         </div>
+      </div>
+
+      {/* Bottom Home Navigation */}
+      <div className="bottom-nav">
+        <FaHome className="nav-icon" onClick={() => navigate('/home')} />
       </div>
     </div>
   );

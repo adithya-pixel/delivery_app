@@ -1,153 +1,169 @@
+/* 🌍 Page Wrapper */
 .select-address-container {
-  padding: 24px 16px 140px;
-  max-width: 720px;
+  max-width: 960px;
   margin: auto;
-  font-family: 'Poppins', sans-serif;
-  background-color: #fff;
-  color: #333;
+  padding: 48px 24px 160px;
+  font-family: 'Inter', sans-serif;
+  background-color: #f9fafb;
+  color: #1e293b;
+  min-height: 100vh;
+  animation: fadeSlideIn 0.6s ease-in-out;
 }
 
+/* 🔖 Page Title */
 .heading {
-  font-size: 26px;
-  font-weight: 600;
-  text-align: center;
-  margin-bottom: 30px;
-  color: #222;
+  font-size: 28px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 40px;
+  border-left: 6px solid #2563eb;
+  padding-left: 16px;
 }
 
-.no-address-msg {
-  font-size: 16px;
-  text-align: center;
-  color: #999;
-  margin-top: 40px;
+/* 🚧 Section Divider */
+.section-divider {
+  height: 1px;
+  background-color: #e5e7eb;
+  margin: 32px 0;
 }
 
+/* 📦 Address Grid Cards */
+.address-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+/* 🧊 Address Card */
 .address-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  background-color: #f9f9f9;
+  background-color: #ffffff;
   border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 16px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
-  transition: all 0.2s;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.03);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  animation: fadeUp 0.5s ease;
 }
 
 .address-item:hover {
-  background-color: #f0faff;
-  border-color: #0ea5e9;
+  transform: scale(1.02);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
 }
 
+/* 📋 Text Info */
 .address-details {
-  font-size: 14px;
-  line-height: 1.5;
-  color: #444;
-  flex: 1;
-  margin-right: 16px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #334155;
+  padding-right: 32px;
 }
 
-.address-item input[type='radio'] {
-  accent-color: #0ea5e9;
-  transform: scale(1.3);
-  cursor: pointer;
-  margin-top: 6px;
-}
-
+/* ✅ Default Tag */
 .default-label {
-  color: green;
-  font-weight: bold;
-  margin-left: 8px;
+  background-color: #dbeafe;
+  color: #1d4ed8;
+  font-weight: 600;
   font-size: 13px;
+  padding: 5px 12px;
+  border-radius: 16px;
+  margin-top: 10px;
+  display: inline-block;
 }
 
+/* 🔘 Radio Button */
+.address-item input[type='radio'] {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  transform: scale(1.4);
+  accent-color: #2563eb;
+  cursor: pointer;
+}
+
+/* ➕ Show More Button */
 .show-more-btn {
   display: block;
-  margin: 20px auto 10px;
-  background: #fff;
-  color: #0ea5e9;
-  border: 2px dashed #0ea5e9;
-  padding: 10px 16px;
-  border-radius: 8px;
+  margin: 36px auto 0;
+  padding: 12px 24px;
+  background-color: #eff6ff;
+  color: #2563eb;
+  font-weight: 600;
+  border: 2px dashed #2563eb;
+  border-radius: 12px;
   cursor: pointer;
-  font-size: 15px;
-  font-weight: 500;
-  transition: 0.3s ease;
+  transition: background-color 0.3s ease;
 }
 
 .show-more-btn:hover {
-  background-color: #e0f7ff;
+  background-color: #dbeafe;
 }
 
-.address-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
-}
-
-.manage-address-info {
+/* ℹ️ No Address Message */
+.no-address-msg {
   text-align: center;
-  margin-top: 30px;
+  font-size: 15px;
+  color: #9ca3af;
+  margin-top: 60px;
+}
+
+/* 🛠️ Manage Section */
+.manage-address-info {
+  margin-top: 48px;
+  text-align: center;
 }
 
 .manage-msg {
   font-size: 14px;
-  color: #555;
+  color: #6b7280;
+  margin-bottom: 12px;
 }
 
+/* 🧭 CTA Buttons */
 .manage-address-btn,
 .pay-button {
-  background-color: #10b981;
-  color: white;
-  font-size: 17px;
+  display: block;
+  width: 100%;
+  max-width: 360px;
+  margin: 14px auto;
+  padding: 14px 20px;
+  font-size: 16px;
   font-weight: 600;
-  padding: 12px 24px;
+  color: white;
   border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
-  transition: background 0.3s ease;
-  display: block;              /* Make it block so margin auto works */
-  margin: 30px auto 0 auto;    /* Center horizontally */
-  text-align: center;
-  width: fit-content;          /* Just enough width for content */
-  min-width: 220px;
+  border-radius: 12px;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
-
 
 .manage-address-btn {
-  background-color: #0ea5e9;
-  color: #fff;
-  border: none;
-}
-
-.manage-address-btn:hover {
-  background-color: #0284c7;
-}
-
-.pay-button {
-  background-color: #10b981;
-  color: #fff;
-  border: none;
-}
-
-.pay-button:hover {
   background-color: #059669;
 }
 
+.manage-address-btn:hover {
+  background-color: #047857;
+  transform: translateY(-2px);
+}
+
+.pay-button {
+  background-color: #2563eb;
+}
+
+.pay-button:hover {
+  background-color: #1d4ed8;
+  transform: translateY(-2px);
+}
+
+/* 🧭 Bottom Navigation */
 .bottom-nav {
   position: fixed;
   bottom: 0;
-  left: 0;
   width: 100%;
-  background: white;
-  border-top: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  padding: 14px 0;
+  border-top: 1px solid #e5e7eb;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.04);
   display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding: 12px 0;
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+  justify-content: center;
   z-index: 100;
 }
 
@@ -155,15 +171,39 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  color: #475569;
   font-size: 13px;
-  color: #666;
   cursor: pointer;
+  transition: color 0.3s ease;
 }
 
 .nav-item:hover {
-  color: #0ea5e9;
+  color: #2563eb;
 }
 
 .nav-item svg {
   margin-bottom: 4px;
+}
+
+/* ✨ Animations */
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

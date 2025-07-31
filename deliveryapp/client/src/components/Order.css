@@ -1,156 +1,246 @@
-/* src/Order.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
-.order-container {
-  max-width: 600px;
-  margin: auto;
-  padding: 24px 16px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f9f9fc;
+/* 🌐 Global Styles */
+.order-page-container {
+  font-family: 'Poppins', sans-serif;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 32px 20px 100px;
+  background: linear-gradient(145deg, #f9fbfd, #eaf0f6);
   min-height: 100vh;
+  animation: fadeIn 0.5s ease;
 }
 
-.order-title {
-  text-align: center;
-  margin-bottom: 20px;
-  font-size: 24px;
-  color: #2d2d2d;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.search-box {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 20px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  font-size: 15px;
-  background-color: white;
-  outline: none;
-  transition: border-color 0.2s ease;
+/* 🔰 Store Header */
+.order-page-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
+  margin-bottom: 28px;
+  animation: slideInLeft 0.5s ease;
 }
 
-.search-box:focus {
-  border-color: #007bff;
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
-.order-message {
-  text-align: center;
-  margin-top: 32px;
-  color: #777;
-  font-size: 15px;
-}
-
-.order-card {
-  background-color: #fff;
+.order-page-logo {
+  width: 60px;
+  height: 60px;
   border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 18px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  transition: all 0.2s ease;
+  object-fit: cover;
+  background-color: #f1f1f1;
+  border: 1px solid #e0e0e0;
+}
+
+.order-page-info {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.order-page-marquee {
+  display: inline-block;
+  animation: scrollLeft 14s linear infinite;
+}
+
+@keyframes scrollLeft {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+.order-page-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1d1d1d;
+  margin-right: 36px;
+}
+
+.order-page-address,
+.order-page-hours {
+  font-size: 14px;
+  color: #666;
+  margin-right: 28px;
+}
+
+/* 🧾 Title */
+.order-page-title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: #222;
+}
+
+/* 🔍 Search */
+.order-page-search {
+  width: 95%;
+  padding: 14px 18px;
+  font-size: 15px;
+  border: 1.5px solid #d1d5db;
+  border-radius: 14px;
+  background: #fff;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.order-page-search:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+  outline: none;
+}
+
+/* ℹ️ Info Message */
+.order-page-message {
+  text-align: center;
+  font-size: 15px;
+  color: #888;
+  margin-top: 32px;
+}
+
+/* 📦 Order Card */
+.order-page-card {
+  background: #fff;
+  padding: 18px 20px;
+  margin-bottom: 16px;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
   cursor: pointer;
 }
 
-.order-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+.order-page-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 22px rgba(76, 29, 149, 0.1);
 }
 
-.order-summary {
+.order-page-summary {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.order-id {
-  margin: 0;
+.order-page-id {
+  font-size: 16px;
+  font-weight: 500;
   color: #333;
 }
 
-.order-date {
+.order-page-date {
   font-size: 13px;
-  color: #666;
+  color: #888;
+  margin-top: 2px;
 }
 
-.badge {
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 12px;
+.order-page-total {
+  font-size: 17px;
   font-weight: 600;
-  color: white;
-  text-transform: capitalize;
-  min-width: 100px;
-  text-align: center;
+  color: #e63946;
 }
-
-.delivered {
-  background-color: #4caf50;
-}
-
-.processing {
-  background-color: #ff9800;
-}
-
-.cancelled {
-  background-color: #f44336;
-}
-
-.pending {
-  background-color: #607d8b;
-}
-
-.order-details {
-  margin-top: 12px;
+/* 🚀 Bottom Navigation */
+.order-page-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-width: 750px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 16px 16px 0 0;
   border-top: 1px solid #eee;
-  padding-top: 12px;
-}
-
-.product-item {
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
   display: flex;
+  justify-content: center; /* Center the single icon */
+  padding: 10px 0;
+  z-index: 99;
+}
+
+.order-page-nav-item {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  margin-bottom: 12px;
+  font-size: 14px;
+  color: #444;
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.3s ease;
 }
 
-.product-img {
-  width: 55px;
-  height: 55px;
-  object-fit: cover;
-  border-radius: 10px;
-  margin-right: 12px;
+.order-page-nav-item:hover {
+  color: #4f46e5;
+  transform: scale(1.06);
 }
 
-.product-info {
+.order-page-nav-item p {
+  margin-top: 4px;
+  font-size: 12px;
+}
+
+/* 🖼️ Fallback Logo Text */
+.order-page-no-logo {
+  color: #aaa;
+  font-style: italic;
   font-size: 14px;
 }
 
-.product-info p {
-  margin: 2px 0;
-  color: #555;
-}
-
-.total-amount {
-  text-align: right;
-  font-size: 16px;
-  font-weight: bold;
-  margin-top: 10px;
-  color: #222;
-}
-
-.bottom-nav {
-  position: sticky;
-  bottom: 0;
-  background: #ffffff;
-  border-top: 1px solid #ccc;
-  padding: 10px 0;
+/* 📄 Pagination Controls */
+.order-page-pagination {
   display: flex;
   justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  gap: 12px;
 }
 
-.nav-item {
-  text-align: center;
-  cursor: pointer;
-  color: #444;
-}
-
-.nav-item p {
-  margin: 4px 0 0;
+.order-page-page-btn {
+  padding: 6px 14px;
+  border: none;
+  background-color: #1e88e5;
+  color: white;
+  border-radius: 8px;
   font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.order-page-page-btn:hover:not(:disabled) {
+  background-color: #1565c0;
+}
+
+.order-page-page-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.order-page-page-info {
+  font-weight: bold;
+  font-size: 14px;
+  color: #444;
 }

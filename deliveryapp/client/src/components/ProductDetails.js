@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './ProductDetails.css';
 
@@ -7,17 +7,22 @@ const ProductDetails = () => {
   const location = useLocation();
   const { product } = location.state || {};
 
+  const [showFeatures, setShowFeatures] = useState(false);
+  const [showSpecifications, setShowSpecifications] = useState(false);
+
   if (!product) return <p>Product not found.</p>;
 
   return (
     <div className="product-details-container">
       <button className="back-btn" onClick={() => navigate(-1)}>← Back</button>
       <h1>{product.ProductName}</h1>
+
       <img
         src={product.image}
         alt={product.ProductName}
         className="details-img"
       />
+
       <p>{product.Description}</p>
 
       <div className="info-box">
@@ -28,25 +33,35 @@ const ProductDetails = () => {
         <p><strong>Price:</strong> ₹{product.Price}</p>
       </div>
 
-      <h3>Features</h3>
-      <ul>
-        {product.Features?.map((feat, i) => (
-          <li key={i}>{feat}</li>
-        ))}
-      </ul>
+      {/* Features Section */}
+      <h3 onClick={() => setShowFeatures(prev => !prev)} className="toggle-heading">
+        {showFeatures ? '▼' : '▶'} Features
+      </h3>
+      {showFeatures && (
+        <ul>
+          {product.Features?.map((feat, i) => (
+            <li key={i}>{feat}</li>
+          ))}
+        </ul>
+      )}
 
-      <h3>Specifications</h3>
-      <ul>
-        {typeof product.Specification === 'string' ? (
-          <li>{product.Specification}</li>
-        ) : (
-          Object.entries(product.Specification).map(([key, val], idx) => (
-            <li key={idx}>
-              <strong>{key}:</strong> {val}
-            </li>
-          ))
-        )}
-      </ul>
+      {/* Specifications Section */}
+      <h3 onClick={() => setShowSpecifications(prev => !prev)} className="toggle-heading">
+        {showSpecifications ? '▼' : '▶'} Specifications
+      </h3>
+      {showSpecifications && (
+        <ul>
+          {typeof product.Specification === 'string' ? (
+            <li>{product.Specification}</li>
+          ) : (
+            Object.entries(product.Specification).map(([key, val], idx) => (
+              <li key={idx}>
+                <strong>{key}:</strong> {val}
+              </li>
+            ))
+          )}
+        </ul>
+      )}
     </div>
   );
 };

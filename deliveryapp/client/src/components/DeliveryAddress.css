@@ -237,3 +237,20 @@ button.secondary:hover {
   cursor: pointer;
 }
 
+.back-button {
+  display: inline-block;
+  margin: 16px;
+  padding: 8px 14px;
+  font-size: 15px;
+  color: #ffffff;
+  background-color: #007bff;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  user-select: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.back-button:hover {
+  background-color: #0056b3;
+}

@@ -9,6 +9,7 @@ import Login from './components/Login';
 import Signup from './components/Signup';
 import Home from './components/Home';
 import Order from './components/OrderPage';
+import OrderDetails from './components/OrderDetails';
 import ProductDetails from './components/ProductDetails';
 import CartPage from './components/Cartpage';
 import Customerprofile from './components/Customerprofile';
@@ -41,6 +42,7 @@ function App() {
           {/* ✅ Protected Routes */}
           <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
           <Route path="/order" element={<ProtectedRoute><Order /></ProtectedRoute>} />
+           <Route path="/order/:id" element={<OrderDetails />} />
           <Route path="/product/:id" element={<ProtectedRoute><ProductDetails /></ProtectedRoute>} />
           <Route path="/cart" element={<ProtectedRoute><CartPage /></ProtectedRoute>} />
           <Route path="/customerProfile" element={<ProtectedRoute><Customerprofile /></ProtectedRoute>} />

@@ -23,7 +23,7 @@ const DeliveryAddress = () => {
     isDefault: false,
   });
 
-  // ✅ Stable fetch function
+  //  Stable fetch function
   const fetchAddresses = useCallback(async () => {
     const token = localStorage.getItem('token');
     if (!token) return alert('User not logged in');
@@ -38,29 +38,37 @@ const DeliveryAddress = () => {
       const addressArray = Array.isArray(addressList) ? addressList : [];
       setSavedAddresses(addressArray);
 
-      // 👉 If no default address, make the first one default
+      //  If no default address, make the first one default
       const hasDefault = addressArray.some(addr => addr.isDefault);
-      if (!hasDefault && addressArray.length > 0) {
-        const firstAddress = addressArray[0];
-        await fetch(`http://localhost:5000/api/address/${firstAddress._id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ ...firstAddress, isDefault: true }),
-        });
+     if (!hasDefault && addressArray.length > 0) {
+  const firstAddress = addressArray[0];
+  const updateRes = await fetch(`http://localhost:5000/api/address/${firstAddress._id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ ...firstAddress, isDefault: true }),
+  });
 
-        // 🔁 Re-fetch updated addresses
-        fetchAddresses();
-      }
+  const updatedAddress = await updateRes.json();
+
+  // Update state immediately without re-fetching
+  const updatedArray = addressArray.map((a) =>
+    a._id === updatedAddress._id
+      ? { ...a, isDefault: true }
+      : { ...a, isDefault: false }
+  );
+  setSavedAddresses(updatedArray);
+}
+
     } catch (err) {
       console.error('❌ Error fetching addresses:', err);
       setSavedAddresses([]);
     }
   }, []);
 
-  // ✅ Call once on component mount
+  //  Call once on component mount
   useEffect(() => {
     fetchAddresses();
   }, [fetchAddresses]);
@@ -88,152 +96,187 @@ const DeliveryAddress = () => {
     setEditing(null);
     setLocationAllowed(false);
   };
+const fetchCoordinatesWithFallback = async (locality, city, state, pincode) => {
+  //  Try different versions of the address (from specific to broad)
+  const queries = [
+    `${locality}, ${city}, ${state}, ${pincode}, India`,
+    `${city}, ${state}, ${pincode}, India`,
+    `${city}, ${state}, India`,
+    `${state}, India`,
+  ];
 
-  const fetchCoordinatesWithFallback = async (locality, city, state, pincode) => {
-    const queries = [
-      `${locality}, ${city}, ${state}, ${pincode}, India`,
-      `${city}, ${state}, ${pincode}, India`,
-      `${city}, ${state}, India`,
-      `${state}, India`,
-    ];
-    const API_KEY = 'pk.75a44cd578adf726a3c447795496e4b7';
-    for (let query of queries) {
-      const response = await fetch(
-        `https://us1.locationiq.com/v1/search.php?key=${API_KEY}&format=json&q=${encodeURIComponent(query)}`
-      );
-      const data = await response.json();
-      if (data && data.length > 0) return data[0];
-    }
-    return null;
-  };
+  const API_KEY = 'pk.75a44cd578adf726a3c447795496e4b7';
 
-  const checkPincodeRadius = async () => {
-    const { pincode, locality, city, state } = formData;
-    if (!pincode || !locality || !city || !state) {
-      alert('❌ Please fill Pincode, City, Locality, and State before checking delivery.');
+  //  Loop through all address combinations
+  for (let query of queries) {
+    const response = await fetch(
+      `https://us1.locationiq.com/v1/search.php?key=${API_KEY}&format=json&q=${encodeURIComponent(query)}`
+    );
+    const data = await response.json();
+
+    // If any version returns coordinates, return it
+    if (data && data.length > 0) return data[0];
+  }
+
+  
+  return null;
+};
+const checkPincodeRadius = async () => {
+  const { pincode, locality, city, state } = formData;
+
+  
+  if (!pincode || !locality || !city || !state) {
+    alert('❌ Please fill Pincode, City, Locality, and State before checking delivery.');
+    return;
+  }
+
+  try {
+    //  Get coordinates for user's location
+    const geo = await fetchCoordinatesWithFallback(locality, city, state, pincode);
+    if (!geo) {
+      alert('❌ Could not find coordinates for this address.');
       return;
     }
 
-    try {
-      const geo = await fetchCoordinatesWithFallback(locality, city, state, pincode);
-      if (!geo) {
-        alert('❌ Could not find coordinates for this address.');
-        return;
-      }
+    const userLat = parseFloat(geo.lat);
+    const userLng = parseFloat(geo.lon);
 
-      const userLat = parseFloat(geo.lat);
-      const userLng = parseFloat(geo.lon);
+    // Fetch store coordinates and delivery radius
+    const storeRes = await fetch('http://localhost:5000/admin/get-store');
+    const store = await storeRes.json();
+    const storeLat = parseFloat(store.latitude);
+    const storeLng = parseFloat(store.longitude);
+    const deliveryRadius = parseFloat(store.deliveryRadius);
 
-      const storeRes = await fetch('http://localhost:5000/admin/get-store');
-      const store = await storeRes.json();
-      const storeLat = parseFloat(store.latitude);
-      const storeLng = parseFloat(store.longitude);
-      const deliveryRadius = parseFloat(store.deliveryRadius);
+    //  Use Haversine Formula to calculate distance
+    const toRad = (val) => (val * Math.PI) / 180;
+    const R = 6371; // Earth's radius in km
+    const dLat = toRad(storeLat - userLat);
+    const dLon = toRad(storeLng - userLng);
+    const a =
+      Math.sin(dLat / 2) ** 2 +
+      Math.cos(toRad(userLat)) * Math.cos(toRad(storeLat)) * Math.sin(dLon / 2) ** 2;
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c;
 
-      const toRad = (val) => (val * Math.PI) / 180;
-      const R = 6371;
-      const dLat = toRad(storeLat - userLat);
-      const dLon = toRad(storeLng - userLng);
-      const a =
-        Math.sin(dLat / 2) ** 2 +
-        Math.cos(toRad(userLat)) * Math.cos(toRad(storeLat)) * Math.sin(dLon / 2) ** 2;
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      const distance = R * c;
-
-      if (distance > deliveryRadius) {
-        alert(`❌ This location is outside our delivery area (~${distance.toFixed(2)} km).`);
-        return;
-      }
-
-      alert('✅ This location is serviceable. Please enter your full address.');
-      setLocationAllowed(true);
-    } catch (err) {
-      console.error('Error checking pincode:', err);
-      alert('❌ Error checking location.');
-    }
-  };
-
-  const handleSubmit = async () => {
-    const { phone_no, full_name, house_building_name, street_area } = formData;
-
-    if (!full_name || !phone_no || !house_building_name || !street_area) {
-      alert('❌ Please fill all the required fields before saving.');
+    //  Compare calculated distance to store's delivery radius
+    if (distance > deliveryRadius) {
+      alert(`❌ This location is outside our delivery area (~${distance.toFixed(2)} km).`);
       return;
     }
 
-    if (!/^\d{10}$/.test(phone_no)) {
-      alert('❌ Please enter a valid 10-digit mobile number.');
+   
+    alert('✅ This location is serviceable. Please enter your full address.');
+    setLocationAllowed(true);
+  } catch (err) {
+    console.error('Error checking pincode:', err);
+    alert('❌ Error checking location.');
+  }
+};
+const handleSubmit = async () => {
+  const { phone_no, full_name, house_building_name, street_area } = formData;
+
+  //  Basic field validation
+  if (!full_name || !phone_no || !house_building_name || !street_area) {
+    alert('❌ Please fill all the required fields before saving.');
+    return;
+  }
+
+  //  Phone number validation (must be 10 digits)
+  if (!/^\d{10}$/.test(phone_no)) {
+    alert('❌ Please enter a valid 10-digit mobile number.');
+    return;
+  }
+
+  try {
+    //  Get coordinates again from full address
+    const geoData = await fetchCoordinatesWithFallback(
+      formData.locality,
+      formData.city,
+      formData.state,
+      formData.pincode
+    );
+    if (!geoData) {
+      alert('❌ Invalid address. Could not get exact coordinates.');
       return;
     }
 
-    try {
-      const geoData = await fetchCoordinatesWithFallback(
-        formData.locality,
-        formData.city,
-        formData.state,
-        formData.pincode
-      );
-      if (!geoData) {
-        alert('❌ Invalid address. Could not get exact coordinates.');
-        return;
-      }
+    const userLat = parseFloat(geoData.lat);
+    const userLng = parseFloat(geoData.lon);
 
-      const userLat = parseFloat(geoData.lat);
-      const userLng = parseFloat(geoData.lon);
+    //  Fetch store coordinates and radius
+    const storeRes = await fetch('http://localhost:5000/admin/get-store');
+    const store = await storeRes.json();
+    const storeLat = parseFloat(store.latitude);
+    const storeLng = parseFloat(store.longitude);
+    const deliveryRadius = parseFloat(store.deliveryRadius);
 
-      const storeRes = await fetch('http://localhost:5000/admin/get-store');
-      const store = await storeRes.json();
-      const storeLat = parseFloat(store.latitude);
-      const storeLng = parseFloat(store.longitude);
-      const deliveryRadius = parseFloat(store.deliveryRadius);
+    //  Haversine Formula
+    const toRad = (val) => (val * Math.PI) / 180;
+    const R = 6371;
+    const dLat = toRad(storeLat - userLat);
+    const dLon = toRad(storeLng - userLng);
+    const a =
+      Math.sin(dLat / 2) ** 2 +
+      Math.cos(toRad(userLat)) * Math.cos(toRad(storeLat)) * Math.sin(dLon / 2) ** 2;
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c;
 
-      const toRad = (val) => (val * Math.PI) / 180;
-      const R = 6371;
-      const dLat = toRad(storeLat - userLat);
-      const dLon = toRad(storeLng - userLng);
-      const a =
-        Math.sin(dLat / 2) ** 2 +
-        Math.cos(toRad(userLat)) * Math.cos(toRad(storeLat)) * Math.sin(dLon / 2) ** 2;
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      const distance = R * c;
-
-      if (distance > deliveryRadius) {
-        alert(`❌ Address is outside the delivery area (~${distance.toFixed(2)} km).`);
-        return;
-      }
-
-      const dataToSend = { ...formData, latitude: geoData.lat, longitude: geoData.lon };
-      const token = localStorage.getItem('token');
-      const method = editing ? 'PUT' : 'POST';
-      const url = editing
-        ? `http://localhost:5000/api/address/${editing._id}`
-        : `http://localhost:5000/api/address`;
-
-      const res = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(dataToSend),
-      });
-
-      const data = await res.json();
-      if (editing) {
-        setSavedAddresses((prev) =>
-          prev.map((a) => (a._id === editing._id ? data.data || data : a))
-        );
-      } else {
-        setSavedAddresses((prev) => [...prev, data.data || data]);
-      }
-
-      resetForm();
-      setShowForm(false);
-    } catch (err) {
-      console.error('Error saving address:', err);
-      alert('❌ Could not validate or save the address.');
+    if (distance > deliveryRadius) {
+      alert(`❌ Address is outside the delivery area (~${distance.toFixed(2)} km).`);
+      return;
     }
-  };
+
+    //  If valid, prepare data for backend
+    const dataToSend = { ...formData, latitude: geoData.lat, longitude: geoData.lon };
+    const token = localStorage.getItem('token');
+    const method = editing ? 'PUT' : 'POST';
+    const url = editing
+      ? `http://localhost:5000/api/address/${editing._id}`
+      : `http://localhost:5000/api/address`;
+
+    //  Save address to backend
+    const res = await fetch(url, {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(dataToSend),
+    });
+
+    const data = await res.json();
+
+    //  Update UI with new or edited address
+    const updatedAddress = data.data || data;
+
+if (formData.isDefault) {
+  setSavedAddresses((prev) =>
+    prev.map((a) =>
+      a._id === updatedAddress._id
+        ? { ...updatedAddress, isDefault: true }
+        : { ...a, isDefault: false }
+    )
+  );
+} else {
+  if (editing) {
+    setSavedAddresses((prev) =>
+      prev.map((a) => (a._id === updatedAddress._id ? updatedAddress : a))
+    );
+  } else {
+    setSavedAddresses((prev) => [...prev, updatedAddress]);
+  }
+}
+
+
+    resetForm();        
+    setShowForm(false); 
+  } catch (err) {
+    console.error('Error saving address:', err);
+    alert('❌ Could not validate or save the address.');
+  }
+};
+
 
   const handleDelete = async (id) => {
     const token = localStorage.getItem('token');
@@ -252,6 +295,9 @@ const DeliveryAddress = () => {
 
   return (
     <div className="address-container">
+      <div className="back-button" onClick={() => navigate('/customerprofile')}>
+    ⬅️ Back
+  </div>
       {!showForm ? (
         <>
           <div className="address-header">
@@ -312,8 +358,12 @@ const DeliveryAddress = () => {
               ))}
             </div>
           )}
+       
+
         </>
+        
       ) : (
+        
         <div className="address-form">
           <h2>{editing ? '✏️ Edit Address' : '➕ Add New Address'}</h2>
           {!locationAllowed ? (
