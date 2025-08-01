@@ -1,169 +1,257 @@
-/* 🌍 Page Wrapper */
+/* Reset & Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #f9fafb, #e2e8f0);
+  color: #2d3748;
+  line-height: 1.6;
+}
+
+/* Main Container */
 .select-address-container {
-  max-width: 960px;
-  margin: auto;
-  padding: 48px 24px 160px;
-  font-family: 'Inter', sans-serif;
-  background-color: #f9fafb;
-  color: #1e293b;
   min-height: 100vh;
-  animation: fadeSlideIn 0.6s ease-in-out;
+  padding-bottom: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* 🔖 Page Title */
-.heading {
-  font-size: 28px;
+/* Header */
+.page-header {
+  width: 100%;
+  background: linear-gradient(135deg, #5a67d8, #6b46c1);
+  color: #fff;
+  padding: 28px 20px;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.page-title {
+  font-size: 24px;
   font-weight: 700;
-  color: #0f172a;
-  margin-bottom: 40px;
-  border-left: 6px solid #2563eb;
-  padding-left: 16px;
+  margin-top: 8px;
 }
 
-/* 🚧 Section Divider */
-.section-divider {
-  height: 1px;
-  background-color: #e5e7eb;
-  margin: 32px 0;
+.header-icon {
+  font-size: 26px;
 }
 
-/* 📦 Address Grid Cards */
-.address-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 24px;
+/* Sections */
+.address-section,
+.order-summary,
+.action-section {
+  width: 100%;
+  max-width: 720px;
+  margin: 28px auto;
+  padding: 0 24px;
 }
 
-/* 🧊 Address Card */
-.address-item {
-  background-color: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.03);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+/* Address Card */
+.address-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 22px;
+  margin-bottom: 20px;
+  border: 2px solid transparent;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.4s ease forwards;
   position: relative;
-  animation: fadeUp 0.5s ease;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
 }
 
-.address-item:hover {
-  transform: scale(1.02);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
+.address-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(135deg, #5a67d8, #6b46c1);
+  opacity: 0;
+  transition: opacity 0.3s;
 }
 
-/* 📋 Text Info */
+.address-card.selected,
+.address-card.default-address {
+  border-color: #5a67d8;
+}
+
+.address-card.selected::before,
+.address-card.default-address::before {
+  opacity: 1;
+}
+
+.address-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
+}
+
+.recipient-name {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
 .address-details {
   font-size: 15px;
-  line-height: 1.6;
-  color: #334155;
-  padding-right: 32px;
+  color: #4a5568;
 }
 
-/* ✅ Default Tag */
-.default-label {
-  background-color: #dbeafe;
-  color: #1d4ed8;
+.address-line {
+  margin-bottom: 4px;
+}
+
+.state {
   font-weight: 600;
-  font-size: 13px;
-  padding: 5px 12px;
-  border-radius: 16px;
-  margin-top: 10px;
-  display: inline-block;
+  color: #5a67d8;
 }
 
-/* 🔘 Radio Button */
-.address-item input[type='radio'] {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  transform: scale(1.4);
-  accent-color: #2563eb;
+.address-radio {
+  accent-color: #5a67d8;
+  width: 18px;
+  height: 18px;
+  margin-top: 6px;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
-/* ➕ Show More Button */
-.show-more-btn {
-  display: block;
-  margin: 36px auto 0;
+/* Show More Button */
+.show-more-button {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+  border: none;
   padding: 12px 24px;
-  background-color: #eff6ff;
-  color: #2563eb;
-  font-weight: 600;
-  border: 2px dashed #2563eb;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.show-more-btn:hover {
-  background-color: #dbeafe;
-}
-
-/* ℹ️ No Address Message */
-.no-address-msg {
-  text-align: center;
   font-size: 15px;
-  color: #9ca3af;
-  margin-top: 60px;
+  font-weight: 600;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 16px auto 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: fit-content;
 }
 
-/* 🛠️ Manage Section */
-.manage-address-info {
-  margin-top: 48px;
-  text-align: center;
+.show-more-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(102, 126, 234, 0.4);
 }
 
-.manage-msg {
-  font-size: 14px;
-  color: #6b7280;
-  margin-bottom: 12px;
+/* Order Summary */
+.order-summary {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  padding: 24px;
 }
 
-/* 🧭 CTA Buttons */
-.manage-address-btn,
-.pay-button {
-  display: block;
-  width: 100%;
-  max-width: 360px;
-  margin: 14px auto;
-  padding: 14px 20px;
+.order-summary h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.price-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+  color: #4a5568;
+}
+
+.price-row.total {
+  font-size: 18px;
+  font-weight: bold;
+  color: #2d3748;
+  padding-top: 12px;
+  border-top: 2px solid #e2e8f0;
+}
+
+/* Action Section */
+.action-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-top: 30px;
+}
+
+/* Buttons */
+.manage-address-button,
+.place-order-button {
+  padding: 14px 26px;
+  border-radius: 10px;
   font-size: 16px;
   font-weight: 600;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  width: 100%;
+  max-width: 500px;
+}
+
+.manage-address-button {
+  background: #fff;
+  color: #5a67d8;
+  border: 2px solid #5a67d8;
+}
+
+.manage-address-button:hover {
+  background: #5a67d8;
+  color: #fff;
+}
+
+.place-order-button {
+  background: linear-gradient(to right, #38a169, #48bb78);
   color: white;
   border: none;
-  border-radius: 12px;
-  transition: background 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 16px rgba(56, 161, 105, 0.3);
 }
 
-.manage-address-btn {
-  background-color: #059669;
+.place-order-button:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(72, 187, 120, 0.4);
 }
 
-.manage-address-btn:hover {
-  background-color: #047857;
-  transform: translateY(-2px);
+.place-order-button:disabled {
+  background: #cbd5e0;
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
-.pay-button {
-  background-color: #2563eb;
-}
-
-.pay-button:hover {
-  background-color: #1d4ed8;
-  transform: translateY(-2px);
-}
-
-/* 🧭 Bottom Navigation */
-.bottom-nav {
+/* Bottom Navigation */
+.bottom-navigation {
   position: fixed;
   bottom: 0;
-  width: 100%;
-  background-color: #ffffff;
-  padding: 14px 0;
-  border-top: 1px solid #e5e7eb;
-  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.04);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-top: 1px solid #e2e8f0;
+  padding: 12px 20px;
   display: flex;
   justify-content: center;
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.05);
   z-index: 100;
 }
 
@@ -171,22 +259,25 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: #475569;
   font-size: 13px;
-  cursor: pointer;
-  transition: color 0.3s ease;
+  font-weight: 600;
+  color: #718096;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
 }
 
 .nav-item:hover {
-  color: #2563eb;
+  background: #edf2f7;
+  color: #5a67d8;
 }
 
-.nav-item svg {
-  margin-bottom: 4px;
+.nav-icon {
+  font-size: 20px;
 }
 
-/* ✨ Animations */
-@keyframes fadeSlideIn {
+/* Animation */
+@keyframes fadeInUp {
   from {
     opacity: 0;
     transform: translateY(20px);
@@ -197,13 +288,65 @@
   }
 }
 
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(40px);
+/* Responsive */
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 20px;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  .place-order-button,
+  .manage-address-button {
+    font-size: 15px;
   }
+
+  .price-row {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .address-card {
+    padding: 18px;
+  }
+
+  .recipient-name {
+    font-size: 15px;
+  }
+
+  .address-line {
+    font-size: 13px;
+  }
+
+  .show-more-button,
+  .manage-address-button {
+    font-size: 14px;
+  }
+
+  .action-section {
+    gap: 12px;
+  }
+
+  .place-order-button {
+    padding: 12px 18px;
+  }
+}
+/* Back Button */
+.back-button {
+  position: absolute;
+  top: 18px;
+  left: 20px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #060202;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  z-index: 10;
+}
+
+.back-button:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
 }

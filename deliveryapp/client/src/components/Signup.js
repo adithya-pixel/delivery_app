@@ -116,7 +116,7 @@ const Signup = () => {
           <input
             type="text"
             name="name"
-            placeholder="Username"
+            placeholder="Name"
             value={formData.name}
             onChange={handleChange}
             className={errors.name ? 'error' : ''}

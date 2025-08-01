@@ -22,6 +22,7 @@ import OrderConfirmation from './components/OrderConfirmation';
 import OrderSuccess from './OrderSuccess';
 import CheckDeliveryLocation from './components/CheckDeliveryLocation';
 import SelectAddressPage from './components/SelectAddressPage';
+import VerifyEmail from './components/VerifyEmail';
 
 function App() {
   const token = localStorage.getItem('token');
@@ -54,6 +55,7 @@ function App() {
           {/* ✅ Public Routes */}
           <Route path="/check-location" element={<CheckDeliveryLocation />} />
           <Route path="/select-address" element={<SelectAddressPage />} />
+            <Route path="/verify-email/:token" element={<VerifyEmail />} />
         </Routes>
 
         {/* ✅ Toast notifications */}
