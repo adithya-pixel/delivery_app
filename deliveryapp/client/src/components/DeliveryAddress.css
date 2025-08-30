@@ -1,14 +1,25 @@
-/* Container */
+/* ===== RESET & BASE ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f8fafc;
+  color: #1e293b;
+  line-height: 1.5;
+}
+
+/* ===== BASE CONTAINER ===== */
 .address-container {
   max-width: 800px;
   margin: 0 auto;
-  padding: 30px 20px 80px; /* bottom space for bottom nav */
-  font-family: 'Segoe UI', sans-serif;
-  color: #333;
-  background-color: #f8fafc;
+  padding: 30px 20px 80px; /* space for bottom nav */
 }
 
-/* Header */
+/* ===== HEADER ===== */
 .address-header {
   display: flex;
   justify-content: space-between;
@@ -17,11 +28,12 @@
 }
 
 .address-header h2 {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 700;
+  color: #0f172a;
 }
 
-/* Address List */
+/* ===== ADDRESS LIST ===== */
 .address-list {
   display: flex;
   flex-direction: column;
@@ -29,56 +41,62 @@
 }
 
 .address-card {
-  background: white;
+  background: #fff;
   padding: 18px 20px;
-  border: 1px solid #d1d5db;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
 }
 
 .address-card:hover {
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-/* Address Actions */
+/* ===== ADDRESS ACTIONS ===== */
 .address-actions {
   margin-top: 12px;
   display: flex;
-  gap: 12px;
+  gap: 10px;
   justify-content: flex-end;
 }
 
-/* Address Form */
+/* ===== ADDRESS FORM ===== */
 .address-form {
-  background: white;
+  background: #fff;
   padding: 24px;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  margin-top: 24px;
 }
 
 .address-form h2 {
   margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f172a;
 }
 
-/* Input Fields */
+/* ===== INPUTS ===== */
 input {
   padding: 10px 14px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
   width: 100%;
   font-size: 15px;
   height: 42px;
   box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
-
 
 input:focus {
-  border-color: #007bff;
+  border-color: #2563eb;
   outline: none;
+  box-shadow: 0 0 6px rgba(37, 99, 235, 0.2);
 }
 
-/* Grid Layout */
+/* ===== GRID LAYOUT ===== */
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -94,18 +112,32 @@ input:focus {
 .checkbox-label {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 14px;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #374151;
+  margin-top: 8px;
+  cursor: pointer;
+  user-select: none;
+  grid-column: 1 / -1;
 }
 
-/* Actions */
+.checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #2563eb;
+  cursor: pointer;
+}
+
+/* ===== FORM ACTIONS ===== */
 .form-actions {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
+  margin-top: 12px;
 }
 
-/* Pincode Check Section */
+/* ===== PINCODE CHECK ===== */
 .pincode-check {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -113,61 +145,69 @@ input:focus {
   margin-bottom: 20px;
 }
 
-.pincode-check input {
-  grid-column: span 1;
-}
-
 .autofill-btn {
-  background-color: #16a34a;
+  background: linear-gradient(135deg, #059669, #10b981);
   color: white;
   font-weight: 600;
   padding: 12px 16px;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
   grid-column: span 2;
-  transition: background 0.3s;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
 }
 
 .autofill-btn:hover {
-  background-color: #15803d;
+  background: linear-gradient(135deg, #047857, #059669);
+  box-shadow: 0 4px 10px rgba(16, 185, 129, 0.35);
 }
 
-/* Button Base */
+/* ===== BUTTONS ===== */
 button {
+  
   border: none;
   padding: 10px 16px;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
-  transition: background-color 0.3s ease;
+  transition: all 0.25s ease;
 }
 
-/* Button Styles */
+/* Primary */
 button.primary {
-  background-color: #3b82f6;
+  background: linear-gradient(135deg, #6aa2c6, #acd54b);
   color: white;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
 }
 button.primary:hover {
-  background-color: #2563eb;
+ background: linear-gradient(135deg, #6aa2c6, #384d08);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
 }
 
+/* Danger */
 button.danger {
-  background-color: #ef4444;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
   color: white;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25);
 }
 button.danger:hover {
-  background-color: #dc2626;
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35);
 }
 
+/* Success */
 button.success {
-  background-color: #10b981;
+  background: linear-gradient(135deg, #059669, #10b981);
   color: white;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.25);
 }
 button.success:hover {
-  background-color: #059669;
+  background: linear-gradient(135deg, #047857, #059669);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
 }
 
+/* Secondary */
 button.secondary {
   background-color: #6b7280;
   color: white;
@@ -176,84 +216,75 @@ button.secondary:hover {
   background-color: #4b5563;
 }
 
-/* Bottom Navigation */
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: white;
-  border-top: 1px solid #e5e7eb;
-  display: flex;
-  justify-content: space-around;
-  padding: 12px 0;
-  z-index: 100;
-  box-shadow: 0 -2px 6px rgba(0,0,0,0.05);
-}
-
-.nav-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: #374151;
+/* Back Button */
+.back-button {
+  display: inline-block;
+  margin: 16px 0;
+  padding: 10px 16px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  border-radius: 10px;
   cursor: pointer;
-  font-size: 14px;
-  transition: color 0.2s ease;
+  user-select: none;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
+}
+.back-button:hover {
+  background: linear-gradient(135deg, #1d4ed8, #2563eb);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
 }
 
-.nav-item:hover {
-  color: #2563eb;
-}
+/* ===== DEFAULT BADGE ===== */
 .default-badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background-color: #fef3c7; /* soft gold background */
-  color: #92400e; /* deep gold text */
+  background-color: #fef3c7;
+  color: #92400e;
   font-size: 12px;
   font-weight: 600;
   padding: 4px 8px;
   border-radius: 20px;
   margin-left: 10px;
 }
-/* In your existing CSS */
 
-/* Ensure labels inside .form-grid span both columns */
-.form-grid .checkbox-label {
-  grid-column: 1 / -1; /* span two columns */
+/* ===== BOTTOM NAVIGATION ===== */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-width: 1000px;
+  margin: 0 auto;
+  height: 64px;
+  background-color: #ffffffdd;
+  backdrop-filter: blur(10px);
+  border-top: 1px solid #e2e8f0;
   display: flex;
+  justify-content: space-around;
   align-items: center;
-  gap: 10px;
-  font-size: 15px;
-  font-weight: 500;
-  color: #374151;
-  margin-top: 8px;
-  cursor: pointer;
-  user-select: none;
+  z-index: 1000;
+  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.05);
 }
 
-/* Style the checkbox itself */
-.form-grid .checkbox-label input[type='checkbox'] {
-  width: 18px;
-  height: 18px;
-  accent-color: #3b82f6;
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #64748b;
   cursor: pointer;
+  font-size: 13px;
+  transition: color 0.2s ease, transform 0.2s ease;
 }
 
-.back-button {
-  display: inline-block;
-  margin: 16px;
-  padding: 8px 14px;
-  font-size: 15px;
-  color: #ffffff;
-  background-color: #007bff;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  user-select: none;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+.nav-item:hover,
+.nav-item.active {
+  color: #2563eb;
+  transform: scale(1.1);
 }
 
-.back-button:hover {
-  background-color: #0056b3;
+.nav-item svg {
+  font-size: 22px;
 }

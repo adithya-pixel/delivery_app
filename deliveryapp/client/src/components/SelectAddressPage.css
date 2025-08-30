@@ -1,4 +1,6 @@
-/* Reset & Base */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+/* 🔄 Reset & Base */
 * {
   margin: 0;
   padding: 0;
@@ -6,64 +8,65 @@
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #f9fafb, #e2e8f0);
-  color: #2d3748;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(145deg, #f9fbfd, #eef4fa);
+  color: #1e293b;
   line-height: 1.6;
 }
 
-/* Main Container */
+/* 🏠 Main Container */
 .select-address-container {
   min-height: 100vh;
-  padding-bottom: 140px;
+  padding-bottom: 120px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-/* Header */
+/* 🔝 Header */
 .page-header {
   width: 100%;
-  background: linear-gradient(135deg, #5a67d8, #6b46c1);
+  background: linear-gradient(135deg, #6aa2c6, #acd54b);
   color: #fff;
-  padding: 28px 20px;
+  padding: 24px 20px;
   text-align: center;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
   z-index: 50;
+  border-radius: 0 0 12px 12px;
 }
 
 .page-title {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 700;
-  margin-top: 8px;
+  margin-top: 6px;
 }
 
 .header-icon {
-  font-size: 26px;
+  font-size: 24px;
 }
 
-/* Sections */
+/* 📦 Sections */
 .address-section,
 .order-summary,
 .action-section {
   width: 100%;
   max-width: 720px;
-  margin: 28px auto;
-  padding: 0 24px;
+  margin: 24px auto;
+  padding: 0 20px;
 }
 
-/* Address Card */
+/* 📍 Address Card */
 .address-card {
   background: #fff;
   border-radius: 14px;
-  padding: 22px;
-  margin-bottom: 20px;
+  padding: 20px;
+  margin-bottom: 18px;
   border: 2px solid transparent;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
-  animation: fadeInUp 0.4s ease forwards;
+  animation: fadeInUp 0.35s ease forwards;
   position: relative;
   display: flex;
   align-items: flex-start;
@@ -77,14 +80,14 @@ body {
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(135deg, #5a67d8, #6b46c1);
+  background: linear-gradient(135deg, #6aa2c6, #acd54b);
   opacity: 0;
   transition: opacity 0.3s;
 }
 
 .address-card.selected,
 .address-card.default-address {
-  border-color: #5a67d8;
+  border-color: #6aa2c6;
 }
 
 .address-card.selected::before,
@@ -93,19 +96,19 @@ body {
 }
 
 .address-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.12);
 }
 
 .recipient-name {
-  font-size: 17px;
-  font-weight: 700;
-  margin-bottom: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
 }
 
 .address-details {
-  font-size: 15px;
-  color: #4a5568;
+  font-size: 14px;
+  color: #475569;
 }
 
 .address-line {
@@ -114,11 +117,11 @@ body {
 
 .state {
   font-weight: 600;
-  color: #5a67d8;
+  color: #2563eb;
 }
 
 .address-radio {
-  accent-color: #5a67d8;
+  accent-color: #6aa2c6;
   width: 18px;
   height: 18px;
   margin-top: 6px;
@@ -126,9 +129,9 @@ body {
   flex-shrink: 0;
 }
 
-/* Show More Button */
+/* 👇 Show More Button */
 .show-more-button {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #6aa2c6, #acd54b);
   color: #fff;
   border: none;
   padding: 12px 24px;
@@ -147,59 +150,58 @@ body {
 
 .show-more-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 6px 18px rgba(106, 162, 198, 0.3);
 }
 
-/* Order Summary */
+/* 📊 Order Summary */
 .order-summary {
   background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-  padding: 24px;
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  padding: 22px;
 }
 
 .order-summary h3 {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 .price-breakdown {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .price-row {
   display: flex;
   justify-content: space-between;
-  font-size: 16px;
-  color: #4a5568;
+  font-size: 15px;
+  color: #475569;
 }
 
 .price-row.total {
-  font-size: 18px;
-  font-weight: bold;
-  color: #2d3748;
-  padding-top: 12px;
+  font-size: 17px;
+  font-weight: 700;
+  color: #1e293b;
+  padding-top: 10px;
   border-top: 2px solid #e2e8f0;
 }
 
-/* Action Section */
+/* ✅ Action Section */
 .action-section {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 16px;
-  margin-top: 30px;
+  margin-top: 24px;
 }
 
-/* Buttons */
 .manage-address-button,
 .place-order-button {
-  padding: 14px 26px;
-  border-radius: 10px;
-  font-size: 16px;
+  padding: 14px 22px;
+  border-radius: 12px;
+  font-size: 15px;
   font-weight: 600;
   transition: all 0.3s ease;
   display: flex;
@@ -211,27 +213,29 @@ body {
   max-width: 500px;
 }
 
+/* Manage Address (outline style) */
 .manage-address-button {
   background: #fff;
-  color: #5a67d8;
-  border: 2px solid #5a67d8;
+  color: #6aa2c6;
+  border: 2px solid #6aa2c6;
 }
 
 .manage-address-button:hover {
-  background: #5a67d8;
+  background: #6aa2c6;
   color: #fff;
 }
 
+/* Place Order (primary style) */
 .place-order-button {
-  background: linear-gradient(to right, #38a169, #48bb78);
+  background: linear-gradient(135deg, #6aa2c6, #acd54b);
   color: white;
   border: none;
-  box-shadow: 0 4px 16px rgba(56, 161, 105, 0.3);
+  box-shadow: 0 4px 14px rgba(106, 162, 198, 0.3);
 }
 
 .place-order-button:hover:not(:disabled) {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 30px rgba(72, 187, 120, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(106, 162, 198, 0.35);
 }
 
 .place-order-button:disabled {
@@ -240,7 +244,7 @@ body {
   box-shadow: none;
 }
 
-/* Bottom Navigation */
+/* 🚀 Bottom Navigation */
 .bottom-navigation {
   position: fixed;
   bottom: 0;
@@ -248,10 +252,10 @@ body {
   right: 0;
   background: #fff;
   border-top: 1px solid #e2e8f0;
-  padding: 12px 20px;
+  padding: 10px 18px;
   display: flex;
   justify-content: center;
-  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
   z-index: 100;
 }
 
@@ -260,23 +264,46 @@ body {
   flex-direction: column;
   align-items: center;
   font-size: 13px;
-  font-weight: 600;
-  color: #718096;
-  padding: 8px 12px;
-  border-radius: 10px;
+  font-weight: 500;
+  color: #64748b;
+  padding: 8px 10px;
+  border-radius: 8px;
   transition: all 0.3s ease;
 }
 
-.nav-item:hover {
-  background: #edf2f7;
-  color: #5a67d8;
+.nav-item:hover,
+.nav-item.active {
+  color: #2563eb;
+  background: #f1f5f9;
+  transform: scale(1.05);
 }
 
 .nav-icon {
   font-size: 20px;
+  margin-bottom: 2px;
 }
 
-/* Animation */
+/* ⬅️ Back Button */
+.back-button {
+  position: absolute;
+  top: 18px;
+  left: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  background: rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
+}
+
+/* 🎞️ Animation */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -288,17 +315,15 @@ body {
   }
 }
 
-/* Responsive */
+/* 📱 Responsive */
 @media (max-width: 768px) {
   .page-title {
     font-size: 20px;
   }
-
   .place-order-button,
   .manage-address-button {
-    font-size: 15px;
+    font-size: 14px;
   }
-
   .price-row {
     font-size: 14px;
   }
@@ -306,47 +331,22 @@ body {
 
 @media (max-width: 480px) {
   .address-card {
-    padding: 18px;
+    padding: 16px;
   }
-
   .recipient-name {
     font-size: 15px;
   }
-
   .address-line {
     font-size: 13px;
   }
-
   .show-more-button,
   .manage-address-button {
     font-size: 14px;
   }
-
   .action-section {
     gap: 12px;
   }
-
   .place-order-button {
     padding: 12px 18px;
   }
-}
-/* Back Button */
-.back-button {
-  position: absolute;
-  top: 18px;
-  left: 20px;
-  font-size: 16px;
-  font-weight: 500;
-  color: #060202;
-  background: rgba(255, 255, 255, 0.15);
-  padding: 8px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
-  z-index: 10;
-}
-
-.back-button:hover {
-  background: rgba(255, 255, 255, 0.25);
-  transform: translateY(-2px);
 }

@@ -1,94 +1,160 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+/* 🌐 Global Styles */
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #f9f9f9;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(145deg, #f9fbfd, #eef4fa);
+  min-height: 100vh;
 }
 
+/* 🔝 Header + Footer */
 header, footer {
-  background-color: #007BFF;
+  background: #2563eb;
   color: white;
   text-align: center;
   padding: 16px;
+  font-weight: 600;
+  border-radius: 0 0 12px 12px;
 }
 
+footer {
+  background: #f8fafc;
+  color: #475569;
+  border-top: 1px solid #e2e8f0;
+}
+
+/* 🛒 Cart Layout */
 .cart-container {
   display: grid;
   grid-template-columns: 2fr 1fr;
-  gap: 16px;
-  padding: 16px;
+  gap: 20px;
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto 100px;
 }
 
+/* 🛍️ Cart Item Card */
 .cart-item {
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  background: white;
+  padding: 16px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.cart-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.1);
 }
 
 .cart-item img {
   width: 80px;
   height: 80px;
+  border-radius: 12px;
   object-fit: cover;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
 }
+
+.cart-item-details {
+  flex: 1;
+}
+
+.cart-item-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.cart-item-price {
+  font-size: 14px;
+  color: #64748b;
+}
+
 .cart-item button {
-  padding: 4px 8px;
+  padding: 6px 10px;
   margin: 0 2px;
-  background-color: #ddd;
+  background-color: #f1f5f9;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s ease;
 }
 
 .cart-item button:hover {
-  background-color: #ccc;
+  background-color: #e2e8f0;
 }
 
-
+/* 💰 Price Details Card */
 .price-details {
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 16px;
-  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  background: #fff;
   height: fit-content;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .price-details h3 {
   margin-top: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1e293b;
 }
 
+.price-details p {
+  font-size: 14px;
+  color: #475569;
+  margin: 6px 0;
+}
+
+.price-details .total {
+  font-weight: 700;
+  font-size: 16px;
+  color: #2563eb;
+  margin-top: 10px;
+}
+
+/* ✅ Place Order Button */
 .place-order-btn {
   display: block;
   width: 100%;
-  background-color: #28a745;
+  background: linear-gradient(135deg, #6aa2c6, #acd54b);
   color: white;
-  padding: 10px;
+  padding: 12px;
   border: none;
-  border-radius: 6px;
-  margin-top: 16px;
+  border-radius: 12px;
+  margin-top: 20px;
+  font-size: 15px;
+  font-weight: 600;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .place-order-btn:hover {
-  background-color: #218838;
+  background: linear-gradient(135deg, #29a4c0, #56c024);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.15);
 }
 
-footer {
-  background-color: #f1f1f1;
-  color: #333;
-}
+/* 🚀 Bottom Navigation */
 .bottom-nav {
   position: fixed;
   bottom: 0;
   width: 100%;
+  max-width: 750px;
+  margin: 0 auto;
   background-color: #fff;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid #e2e8f0;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
   display: flex;
   justify-content: center;
   padding: 10px 0;
-  z-index: 1000; /* Ensure it stays on top */
+  z-index: 1000;
 }
 
 .bottom-nav .nav-item {
@@ -96,9 +162,15 @@ footer {
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: #333;
-  font-size: 12px;
-  user-select: none;
+  color: #64748b;
+  font-size: 13px;
+  transition: all 0.3s ease;
+}
+
+.bottom-nav .nav-item:hover,
+.bottom-nav .nav-item.active {
+  color: #2563eb;
+  transform: scale(1.08);
 }
 
 .bottom-nav .nav-item p {
@@ -106,10 +178,11 @@ footer {
   font-size: 12px;
 }
 
+/* 📦 Cart Footer */
 .cart-footer {
   padding: 20px 0;
   text-align: center;
-  margin-top: 60px; /* To avoid overlap with fixed bottom nav */
+  margin-top: 60px; /* Avoid overlap with fixed nav */
+  color: #64748b;
+  font-size: 13px;
 }
-
-
