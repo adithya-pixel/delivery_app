@@ -1,4 +1,3 @@
-// CartPage.jsx
 import React, { useState } from 'react';
 import './cart.css';
 import { FaHome } from 'react-icons/fa';
@@ -52,33 +51,43 @@ const CartPage = () => {
       <header className="cart-header">Your Cart</header>
 
       <div className="cart-container">
-        {cartItems.length === 0 ? (
-          <p>Your cart is empty.</p>
-        ) : (
-          cartItems.map((item) => (
-            <div className="cart-item" key={item.Barcode}>
-              <img src={item.image || 'placeholder.png'} alt={item.ProductName} />
-              <div style={{ flex: 1 }}>
-                <h2>{item.ProductName}</h2>
-                <p>Price: ₹{item.Price}</p>
-                <div>
-                  <button onClick={() => updateQuantity(item.Barcode, -1)}>-</button>
-                  <span style={{ margin: '0 10px' }}>{item.quantity || 1}</span>
-                  <button onClick={() => updateQuantity(item.Barcode, 1)}>+</button>
+        {/* 🛍️ Left Side - Cart Items */}
+        <div className="cart-items">
+          {cartItems.length === 0 ? (
+            <p className="empty-cart">Your cart is empty.</p>
+          ) : (
+            cartItems.map((item) => (
+              <div className="cart-item" key={item.Barcode}>
+                <img
+                  src={item.image || 'placeholder.png'}
+                  alt={item.ProductName}
+                />
+                <div className="cart-item-details">
+                  <h2 className="cart-item-title">{item.ProductName}</h2>
+                  <p className="cart-item-price">₹{item.Price}</p>
+                  <div className="quantity-controls">
+                    <button onClick={() => updateQuantity(item.Barcode, -1)}>-</button>
+                    <span>{item.quantity || 1}</span>
+                    <button onClick={() => updateQuantity(item.Barcode, 1)}>+</button>
+                  </div>
                 </div>
+                <button
+                  className="remove-btn"
+                  onClick={() => removeItem(item.Barcode)}
+                >
+                  Remove
+                </button>
               </div>
-              <button className="remove-btn" onClick={() => removeItem(item.Barcode)}>
-                Remove
-              </button>
-            </div>
-          ))
-        )}
+            ))
+          )}
+        </div>
 
+        {/* 💰 Right Side - Price Details */}
         <div className="price-details">
           <h3>Price Details</h3>
           <p>Total: ₹{totalPrice.toFixed(2)}</p>
           <p>GST (0%): ₹{gst.toFixed(2)}</p>
-          <p><strong>Grand Total: ₹{grandTotal.toFixed(2)}</strong></p>
+          <p className="total">Grand Total: ₹{grandTotal.toFixed(2)}</p>
           <button
             className="place-order-btn"
             onClick={goToAddressPage}
@@ -89,9 +98,10 @@ const CartPage = () => {
         </div>
       </div>
 
+      {/* 🚀 Bottom Navigation */}
       <div className="bottom-nav">
         <div className="nav-item" onClick={() => navigate('/home')}>
-          <FaHome size={24} />
+          <FaHome size={22} />
           <p>Home</p>
         </div>
       </div>

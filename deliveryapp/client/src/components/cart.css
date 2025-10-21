@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
-/* 🌐 Global Styles */
 body {
   margin: 0;
   font-family: 'Poppins', sans-serif;
@@ -8,8 +7,7 @@ body {
   min-height: 100vh;
 }
 
-/* 🔝 Header + Footer */
-header, footer {
+header.cart-header {
   background: #2563eb;
   color: white;
   text-align: center;
@@ -18,23 +16,30 @@ header, footer {
   border-radius: 0 0 12px 12px;
 }
 
-footer {
-  background: #f8fafc;
-  color: #475569;
-  border-top: 1px solid #e2e8f0;
-}
-
-/* 🛒 Cart Layout */
+/* 🛒 Main Layout */
 .cart-container {
   display: grid;
   grid-template-columns: 2fr 1fr;
-  gap: 20px;
-  padding: 20px;
-  max-width: 900px;
+  gap: 24px;
+  padding: 24px;
+  max-width: 1000px;
   margin: 0 auto 100px;
 }
 
-/* 🛍️ Cart Item Card */
+.cart-items {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.empty-cart {
+  color: #64748b;
+  text-align: center;
+  padding: 40px;
+  font-size: 15px;
+}
+
+/* 🛍️ Cart Item */
 .cart-item {
   display: flex;
   align-items: center;
@@ -68,16 +73,23 @@ footer {
   font-size: 15px;
   font-weight: 600;
   color: #1e293b;
+  margin: 0 0 4px;
 }
 
 .cart-item-price {
   font-size: 14px;
   color: #64748b;
+  margin: 0 0 8px;
 }
 
-.cart-item button {
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.quantity-controls button {
   padding: 6px 10px;
-  margin: 0 2px;
   background-color: #f1f5f9;
   border: none;
   border-radius: 6px;
@@ -86,11 +98,26 @@ footer {
   transition: background 0.2s ease;
 }
 
-.cart-item button:hover {
+.quantity-controls button:hover {
   background-color: #e2e8f0;
 }
 
-/* 💰 Price Details Card */
+.remove-btn {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.remove-btn:hover {
+  background: #fecaca;
+}
+
+/* 💰 Price Details */
 .price-details {
   border-radius: 16px;
   padding: 20px;
@@ -119,7 +146,6 @@ footer {
   margin-top: 10px;
 }
 
-/* ✅ Place Order Button */
 .place-order-btn {
   display: block;
   width: 100%;
@@ -139,6 +165,11 @@ footer {
   background: linear-gradient(135deg, #29a4c0, #56c024);
   transform: translateY(-2px);
   box-shadow: 0 4px 14px rgba(37, 99, 235, 0.15);
+}
+
+.place-order-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 /* 🚀 Bottom Navigation */
@@ -178,11 +209,21 @@ footer {
   font-size: 12px;
 }
 
-/* 📦 Cart Footer */
+/* 📦 Footer */
 .cart-footer {
   padding: 20px 0;
   text-align: center;
-  margin-top: 60px; /* Avoid overlap with fixed nav */
+  margin-top: 60px; /* Avoid overlap */
   color: #64748b;
   font-size: 13px;
+}
+
+/* 📱 Responsive */
+@media (max-width: 768px) {
+  .cart-container {
+    grid-template-columns: 1fr;
+  }
+  .price-details {
+    margin-top: 20px;
+  }
 }
